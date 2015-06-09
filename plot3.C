@@ -1,3 +1,16 @@
+/*
+Inherited from Yen-jie Lee
+https://github.com/yenjie/HIGenerator/blob/master/genAna/macros/plot3.C
+
+Modified by Ian Hunt-Isaak
+
+This file plots the 3-Jet/2-Jet ratio as a function of the leading jet tranverse momentum
+
+The 3-Jet/2-Jet ratio is the ratio of events with 3 jets with pT>30 GeV to the number of events with only 2 Jets with pT>30 GeV
+
+
+
+ */
 #include <TFile.h>
 #include <TCanvas.h>
 #include <TTree.h>
@@ -25,7 +38,7 @@ void plot3() {
   ta->Draw("Sum$(jtpt>30)>2:Max$(jtpt)>>ha","Sum$(jtpt>30)>1");
   tb->Draw("Sum$(jtpt>30)>2:Max$(jtpt)>>hb","Sum$(jtpt>30)>1");
   tc->Draw("Sum$(jtpt>30)>2:Max$(jtpt)>>hc","Sum$(jtpt>30)>1");
-
+  cout<<(Sum$(jtpt>30)>2)
 
   hb->SetMarkerColor(2);
   hb->SetLineColor(2);

@@ -18,8 +18,8 @@ Float_t z_pt[1000];
 Int_t q_njets;
 Int_t w_njets;
 Int_t z_njets;
-Int_t nBinsJR = 15;
-
+Int_t nBinsJR = 10;
+Int_t yMaxJR = 200;
 int findMin(int min, int two,  int three)
 {
   if(two<min){ min=two;}
@@ -48,19 +48,19 @@ void jetRatio(){
   TTree *Tz = (TTree*)file1 -> Get("dijet/t");
   TTree *Tw = (TTree*)file2 -> Get("dijet/t"); 
 
-  TH1F * hQ_JR = new TH1F ("hQ_JR","",nBinsJR,100,300);  
-  TH1F * hZ_JR = new TH1F ("hZ_JR","",nBinsJR,100,300);  
-  TH1F * hW_JR = new TH1F ("hW_JR","",nBinsJR,100,300);
+  TH1F * hQ_JR = new TH1F ("hQ_JR","",nBinsJR,100,yMaxJR);  
+  TH1F * hZ_JR = new TH1F ("hZ_JR","",nBinsJR,100,yMaxJR);  
+  TH1F * hW_JR = new TH1F ("hW_JR","",nBinsJR,100,yMaxJR);
  
 
-  TH1F * hQ_JR2 = new TH1F ("hQ_JR2","",nBinsJR,100,300);  //! pyquen 2 jet events
-  TH1F * hQ_JR3 = new TH1F ("hQ_JR3","",nBinsJR,100,300);  //! pyquen 3 jet events
+  TH1F * hQ_JR2 = new TH1F ("hQ_JR2","",nBinsJR,100,yMaxJR);  //! pyquen 2 jet events
+  TH1F * hQ_JR3 = new TH1F ("hQ_JR3","",nBinsJR,100,yMaxJR);  //! pyquen 3 jet events
  
-  TH1F * hZ_JR2 = new TH1F ("hZ_JR2","",nBinsJR,100,300);  //! pythia z2* 2 jet events
-  TH1F * hZ_JR3 = new TH1F ("hZ_JR3","",nBinsJR,100,300);  //! pythia z2* 3 jet events
+  TH1F * hZ_JR2 = new TH1F ("hZ_JR2","",nBinsJR,100,yMaxJR);  //! pythia z2* 2 jet events
+  TH1F * hZ_JR3 = new TH1F ("hZ_JR3","",nBinsJR,100,yMaxJR);  //! pythia z2* 3 jet events
 
-  TH1F * hW_JR2 = new TH1F ("hW_JR2","",nBinsJR,100,300); //! pyquen wide 2 jet events
-  TH1F * hW_JR3 = new TH1F ("hW_JR3","",nBinsJR,100,300); //! pyquen wide 3 jet events
+  TH1F * hW_JR2 = new TH1F ("hW_JR2","",nBinsJR,100,yMaxJR); //! pyquen wide 2 jet events
+  TH1F * hW_JR3 = new TH1F ("hW_JR3","",nBinsJR,100,yMaxJR); //! pyquen wide 3 jet events
 
   Int_t Nq = Tq->GetEntries();
   Int_t Nz = Tz->GetEntries();
@@ -98,7 +98,7 @@ void jetRatio(){
    if(w_pt[0]>=100 && howMany30(w_pt,w_njets)>=3){
       hW_JR3 ->Fill(w_pt[0]);
     }
-    if(q_pt[0]>=100 && ho wMany30(q_pt,q_njets)>=2){
+    if(q_pt[0]>=100 && howMany30(q_pt,q_njets)>=2){
       hW_JR2 ->Fill(w_pt[0]);
     }
   }
