@@ -7,11 +7,15 @@
 #include <TH1D.h>
 #include <TH2D.h>
 #include <TStyle.h>
+int aColor =3001;
+int bColor = 2;
+int cColor = 4;
+int dColor = 6; // kGreen +1
 
 void plotAnalysis(){
-  bool aj = false;
-  bool phi = false;
-  bool ratio = false;
+  bool aj = true;
+  bool phi = true;
+  bool ratio = true;
   bool raa = true;
 
   TH1::SetDefaultSumw2();
@@ -24,24 +28,31 @@ void plotAnalysis(){
     TH1D *ha_Aj = (TH1D*)f->Get("ha_Aj");
     TH1D *hb_Aj = (TH1D*)f->Get("hb_Aj");
     TH1D *hc_Aj = (TH1D*)f->Get("hc_Aj");
+    TH1D *hd_Aj = (TH1D*)f->Get("hd_Aj");
 
     TCanvas *cAj = new TCanvas("cAj","",600,600);
     cAj ->cd();
 
-    hb_Aj->SetMarkerColor(2);
-    hb_Aj->SetLineColor(2);
-    hc_Aj->SetMarkerColor(4);
-    hc_Aj->SetLineColor(4);
-    ha_Aj->SetMaximum(0.3);
-
-    int na = ha_Aj->GetEntries();  ha_Aj->Scale(1./na);
-    int nb = hb_Aj->GetEntries();  hb_Aj->Scale(1./nb);
-    int nc = hc_Aj->GetEntries();  hc_Aj->Scale(1./nc);
-
-    hb_Aj->SetMarkerStyle(2);
+    hb_Aj->SetMarkerColor(bColor);
+    hb_Aj->SetLineColor(bColor);
+    //  hb_Aj->SetMarkerStyle(2);
     hb_Aj->SetMarkerStyle(20);
-    hc_Aj->SetMarkerStyle(2);
+   
+    hc_Aj->SetMarkerColor(cColor);
+    hc_Aj->SetLineColor(cColor);
+    // hc_Aj->SetMarkerStyle(2);
     hc_Aj->SetMarkerStyle(20);
+   
+    hd_Aj->SetLineColor(dColor);
+    hd_Aj->SetMarkerColor(dColor);
+    hd_Aj->SetMarkerStyle(2);
+    hd_Aj->SetMarkerStyle(20);
+   
+    ha_Aj->SetMaximum(0.3);
+    
+    int na_Aj = ha_Aj->GetEntries();  ha_Aj->Scale(1./na_Aj);
+    int nb_Aj = hb_Aj->GetEntries();  hb_Aj->Scale(1./nb_Aj);
+    int nc_Aj = hc_Aj->GetEntries();  hc_Aj->Scale(1./nc_Aj);
 
     //h0===========
     h0_Aj->SetXTitle("A_{J}");
@@ -55,17 +66,25 @@ void plotAnalysis(){
     ha_Aj->Draw("same HIST");
     hb_Aj->Draw("same");
     hc_Aj->Draw("same");
+    hd_Aj->Draw("same");
 
     TLegend *leg_Aj = new TLegend(0.4,0.5,0.9,0.9);
     leg_Aj->SetFillStyle(0);
     leg_Aj->SetBorderSize(0);
+
     leg_Aj->AddEntry(ha_Aj,"p_{T,1} > 100 GeV, p_{T,2} > 30 GeV","");
     leg_Aj->AddEntry(ha_Aj,"#Delta#phi>2#pi/3","");
     leg_Aj->AddEntry(ha_Aj,"PYTHIA Z2* GEN","l");
+
     leg_Aj->AddEntry(hb_Aj,"PYQUEN wide GEN","pl");
+
     leg_Aj->AddEntry(hc_Aj,"PYQUEN  GEN","pl");
 
+    leg_Aj->AddEntry(hd_Aj,"QPythia GEN","pl");
+
     leg_Aj->Draw();
+
+    cAj->SaveAs("Aj.png","RECREATE");
   }  
 
   //==================PLOT PHI ==================//
@@ -76,6 +95,11 @@ void plotAnalysis(){
     TH1D *ha_Phi = (TH1D*)f->Get("ha_Phi");
     TH1D *hb_Phi = (TH1D*)f->Get("hb_Phi");
     TH1D *hc_Phi = (TH1D*)f->Get("hc_Phi");
+
+    int na_Phi=ha_Phi->GetEntries(); ha_Phi->Scale(1./na_Phi);
+    int nb_Phi=hb_Phi->GetEntries(); hb_Phi->Scale(1./nb_Phi);
+    int nc_Phi=hc_Phi->GetEntries(); hc_Phi->Scale(1./nc_Phi);
+    int nd_Phi=hd_Phi->GetEntries(); hc_Phi->Scale(1./nd_Phi);
 
     ha_Phi->SetMaximum(0.3);
     ha_Phi->SetFillStyle(3001);
@@ -90,6 +114,11 @@ void plotAnalysis(){
     hc_Phi->SetLineColor(4);
     hc_Phi->SetMarkerStyle(2);
     hc_Phi->SetMarkerStyle(20);
+
+    hd_Phi->SetMarkerColor(6);
+    hd_Phi->SetLineColor(6);
+    hd_Phi->SetMarkerStyle(2);
+    hd_Phi->SetMarkerStyle(20);
   
     h0_Phi->SetXTitle("#Delta#phi");
     h0_Phi->SetYTitle("Event Fraction");
@@ -102,7 +131,7 @@ void plotAnalysis(){
     hb_Phi->Draw("same");
     hc_Phi->Draw("same");
 
-    TLegend *leg_Phi = new TLegend(0.4,0.5,0.9,0.9);
+    TLegend *leg_Phi = new TLegend(0.4,0.7,0.9,0.9);
     leg_Phi->SetFillStyle(0);
     leg_Phi->SetBorderSize(0);
 
@@ -113,6 +142,8 @@ void plotAnalysis(){
     leg_Phi->AddEntry(hc_Phi,"PYQUEN  GEN","pl");
 
     leg_Phi->Draw();
+
+    cPhi->SaveAs("Phi.png","RECREATE");
   }
   //=======================JET RAIO=================
   if(ratio){
@@ -156,9 +187,10 @@ void plotAnalysis(){
     leg_Jr->AddEntry(ha_Jr,"Leading Jet p_{T}> 100 GeV","");
     leg_Jr->AddEntry(ha_Jr,"Jet p_{T}> 30 GeV","");
     leg_Jr->AddEntry(ha_Jr,"PYTHIA Z2* GEN","l");
-    leg_Jr->AddEntry(hb_Jr,"JEWEL 0-5% GEN","pl");
-    leg_Jr->AddEntry(hc_Jr,"YAJEM d#bar{d} GEN","pl");
+    leg_Jr->AddEntry(hb_Jr,"PYQUEN wide GEN","pl");
+    leg_Jr->AddEntry(hc_Jr,"PYQUEN GEN","pl");
     leg_Jr->Draw();
+    cJr->SaveAs("jetRatio.png","RECREATE");
   }
 
   //==========================RAA========================//
@@ -207,6 +239,8 @@ void plotAnalysis(){
     leg_R->AddEntry(hb_R,"PYQUEN wide GEN","pl");
     leg_R->AddEntry(hc_R,"PYQUEN GEN","pl");
     leg_R->Draw();
+
+    cR->SaveAs("Raa.png","RECREATE");
     
   }
 }
