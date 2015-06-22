@@ -168,9 +168,9 @@ void combineAnalysis(const int startfile=0, const int endfile=30){
 
     nt -> Draw("acos(cos(dphi))>>temp_Phi","pt1>100&&pt2>30&&acos(cos(dphi))>0.5*3.14159","goff");
     nt->Draw("(pt1-pt2)/(pt1+pt2)>>temp_Aj","pt1>100&&pt2>30&&acos(cos(dphi))>2/3.*3.14159","goff");
-   t->Draw("jtpt>>temp_Raa","","goff");
-   t->Draw("Sum$(jtpt>30)>2:Max$(jtpt)>>temp_JR","Sum$(jtpt>30)>1","goff");
-
+    t->Draw("jtpt>>temp_Raa","","goff");
+    t->Draw("Sum$(jtpt>30)>2:Max$(jtpt)>>temp_JR","Sum$(jtpt>30)>1","goff");
+    
     cout<<temp_Phi->GetEntries()<<"   temp Phi entries\n\n";
     cout<<temp_Aj->GetEntries()<<"   temp Aj entries\n\n";
     cout<<temp_Raa->GetEntries()<<"   temp Raa entries\n\n";
