@@ -87,8 +87,23 @@ void multJewelAnalysis(const int startfile=0, int endfile=-1/*,string infile="me
 
   int nFiles = endfile - startfile;
   cout<<"Running on "<<nFiles<<" forest files"<<endl;
+  TFile *pythia= TFile::Open("root://eosuser.cern.ch://eos/user/i/ihuntisa/PythiaZ2_0_numEvent100000.root");
   
-  TFile f(Form("%s_histograms_endFile%d.root",medType.c_str(),endfile),"RECREATE");
+  TTree * pnt = (TTree*)pythia->Get("dijet/nt");
+  TTree * pt  = (TTree*)pythia->Get("dijet/t");
+
+  TFile f(Form("%s_histograms_endFile%d.root",medType.c_str(),endfile),"RECREATE");//define output file.
+
+   TH1D * pythia_Phi = new TH1D("pythia_Phi","",20,3.14159/2,3.1416);
+  TH1D * pythia_Aj =  new TH1D("pythia_Aj","",20,0,1);
+  TH1D * pythia_Raa =  new TH1D("pythia_Raa","",20,100,300);
+  TProfile * pythia_JR =  new TProfile("pythia_JR","",10,100,200);
+
+  pnt -> Draw("acos(cos(dphi))>>temp_Phi","pt1>100&&pt2>30&&acos(cos(dphi))>0.5*3.14159","goff");
+  pnt->Draw("(pt1-pt2)/(pt1+pt2)>>temp_Aj","pt1>100&&pt2>30&&acos(cos(dphi))>2/3.*3.14159","goff");
+  pt->Draw("jtpt>>temp_Raa","","goff");
+  pt->Draw("Sum$(jtpt>30)>2:Max$(jtpt)>>temp_JR","Sum$(jtpt>30)>1","goff");
+
   std::string name;
   name=medType+"_jewel_Phi";
   
