@@ -46,7 +46,10 @@
 
 
 using namespace std;
- 
+
+int JR_pt_max=400;
+int JR_pt_min=10;
+int JR_bins=20;
 TStopwatch timer;
 
 void multPTHATAnalysis(const int startfile=0, int endfile=-1/*,string infile="med1Filelist.txt"*/ ){
@@ -93,21 +96,28 @@ void multPTHATAnalysis(const int startfile=0, int endfile=-1/*,string infile="me
    TH1D * pythia_Phi = new TH1D("pythia_Phi","",20,3.14159/2,3.1416);
   TH1D * pythia_Aj =  new TH1D("pythia_Aj","",20,0,1);
   TH1D * pythia_Raa =  new TH1D("pythia_Raa","",20,100,300);
-  TProfile * pythia_JR =  new TProfile("pythia_JR","",10,100,200);
-
+  TProfile * pythia_JR =  new TProfile("pythia_JR","",JR_bins,JR_pt_min,JR_pt_max);
+  /*
   pnt -> Draw("acos(cos(dphi))>>pythia_Phi","pt1>100&&pt2>30&&acos(cos(dphi))>0.5*3.14159","goff");
   pnt->Draw("(pt1-pt2)/(pt1+pt2)>>pythia_Aj","pt1>100&&pt2>30&&acos(cos(dphi))>2/3.*3.14159","goff");
+  pt->Draw("jtpt>>pythia_Raa","","goff");
+  pt->Draw("Sum$(jtpt>30)>2:Max$(jtpt)>>pythia_JR","Sum$(jtpt>30)>1","goff");
+
+  */
+  pnt -> Draw("acos(cos(dphi))>>pythia_Phi","acos(cos(dphi))>0.5*3.14159","goff");
+  pnt->Draw("(pt1-pt2)/(pt1+pt2)>>pythia_Aj","acos(cos(dphi))>2/3.*3.14159","goff");
   pt->Draw("jtpt>>pythia_Raa","","goff");
   pt->Draw("Sum$(jtpt>30)>2:Max$(jtpt)>>pythia_JR","Sum$(jtpt>30)>1","goff");
 
 
   stringstream myString;
 
-  TH1D * Phi[11];
-  TH1D *  Aj[11];
-  TH1D * Raa[11];
-  TProfile * JR[11];
-  for(int ifile=startfile;ifile<endfile;ifile++){
+  TH1D * Phi[12];
+  TH1D *  Aj[12];
+  TH1D * Raa[12];
+  TH1D * jtpt[12];
+  TProfile * JR[12];
+  for(int ifile=startfile;ifile<=endfile;ifile++){
   
     // naming histograms ========================
     myString<<medType<<ifile<<"_Phi_25K";
@@ -125,11 +135,13 @@ void multPTHATAnalysis(const int startfile=0, int endfile=-1/*,string infile="me
     myString.str("");
     myString<<medType<<ifile<<"_JR_25K";
     cout<<myString.str()<<"\n";
-    JR[ifile] =  new TProfile(myString.str().c_str(),"",10,100,200);
+    JR[ifile] =  new TProfile(myString.str().c_str(),"",JR_bins,JR_pt_min,JR_pt_max);
     myString.str("");
-    
+    myString<<ifile<<"_jtpt_25K";
+    jtpt[ifile] =  new TH1D(myString.str().c_str(),"",20,10,540 );
+    myString.str("");    
   }
-  for(int ifile=startfile;ifile<endfile;ifile++){ // file loop
+  for(int ifile=startfile;ifile<=endfile;ifile++){ // file loop
     instr >> filename;
     cout<<"Reading From: "<<filename<<std::endl;
     
@@ -144,30 +156,39 @@ void multPTHATAnalysis(const int startfile=0, int endfile=-1/*,string infile="me
     TH1D * temp_Phi = new TH1D("temp_Phi","",20,3.14159/2,3.1416);
     TH1D * temp_Aj =  new TH1D("temp_Aj","",20,0,1);
     TH1D * temp_Raa =  new TH1D("temp_Raa","",20,100,300);
-    TProfile * temp_JR =  new TProfile("temp_JR","",10,100,200);
+    TH1D * temp_jtpt =  new TH1D("temp_jtpt","",20,10,540);
+    TProfile * temp_JR =  new TProfile("temp_JR","",JR_bins,JR_pt_min,JR_pt_max);
 
 
-    nt -> Draw("acos(cos(dphi))>>temp_Phi","pt1>100&&pt2>30&&acos(cos(dphi))>0.5*3.14159","goff");
+    /*    nt -> Draw("acos(cos(dphi))>>temp_Phi","pt1>100&&pt2>30&&acos(cos(dphi))>0.5*3.14159","goff");
     nt->Draw("(pt1-pt2)/(pt1+pt2)>>temp_Aj","pt1>100&&pt2>30&&acos(cos(dphi))>2/3.*3.14159","goff");
     t->Draw("jtpt>>temp_Raa","","goff");
     t->Draw("Sum$(jtpt>30)>2:Max$(jtpt)>>temp_JR","Sum$(jtpt>30)>1","goff");
-    
+   
+    t->Draw("jtpt>>temp_jtpt","","goff");
+    */
+    nt -> Draw("acos(cos(dphi))>>temp_Phi","pt2>15&&acos(cos(dphi))>0.5*3.14159","goff");
+    nt->Draw("(pt1-pt2)/(pt1+pt2)>>temp_Aj","pt2>15&&acos(cos(dphi))>2/3.*3.14159","goff");
+    t->Draw("jtpt>>temp_Raa","","goff");
+    t->Draw("Sum$(jtpt>30)>2:Max$(jtpt)>>temp_JR","Sum$(jtpt>30)>1","goff");
+    t->Draw("jtpt>>temp_jtpt","","goff");
     
       cout<<temp_Phi->GetEntries()<<"   temp Phi entries\n";
       cout<<temp_Aj->GetEntries()<<"   temp Aj entries\n";
       cout<<temp_Raa->GetEntries()<<"   temp Raa entries\n";
-      cout<<temp_JR->GetEntries()<<"   temp JR entries\n\n\n";
-
+      cout<<temp_JR->GetEntries()<<"   temp JR entries\n";
+      cout<<temp_jtpt->GetEntries()<<"   temp jtpt entries\n\n\n";
+      
       Phi[ifile]->Add(temp_Phi);
       Aj[ifile]->Add(temp_Aj);
       Raa[ifile]->Add(temp_Raa);
       JR[ifile]->Add(temp_JR);
-    
-    fin->Close();
+      jtpt[ifile]->Add(temp_jtpt);
+      
+      cout<<jtpt[ifile]->GetEntries()<<"   jtpt entries\n\n\n";
+      fin->Close();
     
   } // end of file loop
- 
-  
   f.cd();
   f.Write();
   f.Close();

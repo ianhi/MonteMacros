@@ -1,7 +1,7 @@
-root -l <<EOF
-.x multPTHATAnalysis.C+
+root -l -b <<EOF
+.x jtptWeight.C+
 .q
 EOF
-root -l <<EOF
-.x multPTHATPlot.C+
+root -l -b <<EOF
+.x jtptWeightPlot.C+
 EOF
