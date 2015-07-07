@@ -162,10 +162,17 @@ void jtptWeight(){
     hSpthat->Fill(varpthat,pthatweightS);
     hpthat->Fill(varpthat);
     Hnref->Fill(nref);
-    if(jtpt[1]>=30) Jet2->Fill(jtpt[0],pthatweightS);
-    if(jtpt[2]>=30) Jet3->Fill(jtpt[0],pthatweightS);
-    if(nref==2) nJet2->Fill(jtpt[0],pthatweightS);
-    if(nref==3) nJet3->Fill(jtpt[0],pthatweightS);
+    bool skip2 =false;
+    //Histograms for jet ratio
+    //skip2 is so 3 jet events aren't also counted in the 2-jet events
+    if(jtpt[2]>=30){ Jet3->Fill(jtpt[0],pthatweightS);skip2=true;}
+    if(jtpt[1]>=30 && !skip2) Jet2->Fill(jtpt[0],pthatweightS);
+
+    if(nref==3){ nJet3->Fill(jtpt[0],pthatweightS); skip2=true;}
+    if(nref==2 && !skip2) nJet2->Fill(jtpt[0],pthatweightS);
+
+
+    //jet pt histograms
     for(int i = 0; i < nref; ++i){///DO CHECK IF SHOULD BE < or <= //loop through the events in a jet
       Qjtpt->Fill(jtpt[i],pthatweightQ);
       Sjtpt->Fill(jtpt[i],pthatweightS); 
