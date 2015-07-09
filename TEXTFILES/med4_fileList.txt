@@ -1,0 +1,11 @@
+/afs/cern.ch/work/i/ihuntisa/WORK/RUTGERS/multFolders/CMSSW_5_3_20/src/outputs/ROOT/med4_15_30_JewelDijet_0_numEvent9000.root
+/afs/cern.ch/work/i/ihuntisa/WORK/RUTGERS/multFolders/CMSSW_5_3_20/src/outputs/ROOT/med4_30_50_JewelDijet_1_numEvent9000.root
+/afs/cern.ch/work/i/ihuntisa/WORK/RUTGERS/multFolders/CMSSW_5_3_20/src/outputs/ROOT/med4_50_80_JewelDijet_2_numEvent9000.root
+/afs/cern.ch/work/i/ihuntisa/WORK/RUTGERS/multFolders/CMSSW_5_3_20/src/outputs/ROOT/med4_80_120_JewelDijet_3_numEvent9000.root
+/afs/cern.ch/work/i/ihuntisa/WORK/RUTGERS/multFolders/CMSSW_5_3_20/src/outputs/ROOT/med4_120_170_JewelDijet_4_numEvent9000.root
+/afs/cern.ch/work/i/ihuntisa/WORK/RUTGERS/multFolders/CMSSW_5_3_20/src/outputs/ROOT/med4_170_220_JewelDijet_5_numEvent9000.root
+/afs/cern.ch/work/i/ihuntisa/WORK/RUTGERS/multFolders/CMSSW_5_3_20/src/outputs/ROOT/med4_220_280_JewelDijet_6_numEvent9000.root
+/afs/cern.ch/work/i/ihuntisa/WORK/RUTGERS/multFolders/CMSSW_5_3_20/src/outputs/ROOT/med4_280_330_JewelDijet_7_numEvent9000.root
+/afs/cern.ch/work/i/ihuntisa/WORK/RUTGERS/multFolders/CMSSW_5_3_20/src/outputs/ROOT/med4_330_400_JewelDijet_8_numEvent9000.root
+/afs/cern.ch/work/i/ihuntisa/WORK/RUTGERS/multFolders/CMSSW_5_3_20/src/outputs/ROOT/med4_400_460_JewelDijet_9_numEvent9000.root
+/afs/cern.ch/work/i/ihuntisa/WORK/RUTGERS/multFolders/CMSSW_5_3_20/src/outputs/ROOT/med4_460_540_JewelDijet_10_numEvent9000.root

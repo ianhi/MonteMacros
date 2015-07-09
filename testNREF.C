@@ -52,13 +52,18 @@ void testNREF(){
    
    for(int iev=0;iev<Nevents;iev++){
       t->GetEntry(iev);
-      if(nref==2){
+      /*   if(nref==2){
 	cout<<"nref: "<<nref<<endl;
 	cout<<"jtpt[0]: "<<jtpt[0]<<endl;
 	cout<<"jtpt[1]: "<<jtpt[1]<<endl;	
 	cout<<"jtpt[2]: "<<jtpt[2]<<endl<<endl;	
+	}*/
+      cout<<"nref: "<<nref<<endl;
+      for(int n=0;n<nref+1;n++){
+	cout<<"jtpt["<<n<<"]: "<<jtpt[n]<<endl;
       }
       for(int i=0;i<1000;i++)
 	jtpt[i]=0;
+    cout<<endl<<endl;
    }
 }

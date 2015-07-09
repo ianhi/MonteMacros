@@ -16,19 +16,23 @@ void jtptWeightPlot(){
   bool bhQpthat=false;//weighted by QCD xs only pthat
   bool bhSpthat=false;//weighted by sum of xs pthat spectra
   bool bhpthat=false;//unweighted pthat spectra
-  bool bJetRatio=true;//3 jet event to 2 jet event ratio
-  bool bNref=true; // histogram of nref
-  bool bNJetRatio=true; //jet ratio using nref
+  bool bJetRatio_pT=true;//3 jet event to 2 jet event ratio
+  bool bJetRatio_hT=true;//3 jet event to 2 jet event ratio
+
   TH1::SetDefaultSumw2();
   gStyle->SetOptStat(0);
-  TFile *f = TFile::Open(Form("weights.root"));
+  std::string prefix="med1";
+  std::string filename=prefix+"_weights.root";
+  std::string saveName;
+  TFile *f = TFile::Open(filename.c_str());
   if(bQjtpt){
     TH1D * Qjtpt = (TH1D*)f->Get("Qjtpt");
     TCanvas * cQj = new TCanvas("cQj","",600,600);
     cQj->cd();
     cQj->SetLogy();
     Qjtpt->Draw();
-    cQj->SaveAs("QCD_Weight_jtpt.png","RECREATE");
+    saveName="PNG/QCD_Weight_jtpt_"+prefix+".png";
+    cQj->SaveAs(saveName.c_str(),"RECREATE");
   }
   if(bSjtpt){
     TH1D * Sjtpt = (TH1D*)f->Get("Sjtpt");
@@ -36,7 +40,8 @@ void jtptWeightPlot(){
     cSj->cd();
     cSj->SetLogy();
     Sjtpt->Draw();    
-    cSj->SaveAs("SUM_Weight_jtpt.png","RECREATE");
+    saveName="PNG/SUM_Weight_jtpt_"+prefix+".png";
+    cSj->SaveAs(saveName.c_str(),"RECREATE");
   }
   if(bhQpthat){
     TH1D * hQpthat = (TH1D*)f->Get("hQpthat");
@@ -44,7 +49,8 @@ void jtptWeightPlot(){
     cQp->cd();
     cQp->SetLogy();
     hQpthat->Draw();
-    cQp->SaveAs("pthat_QCD_Weight.png","RECREATE");
+    saveName="PNG/pthat_QCD_Weight_"+prefix+".png";
+    cQp->SaveAs(saveName.c_str(),"RECREATE");
   }
   if(bhSpthat){
     TH1D * hSpthat = (TH1D*)f->Get("hSpthat");
@@ -52,7 +58,8 @@ void jtptWeightPlot(){
     cSp->cd();
     cSp->SetLogy();
     hSpthat->Draw();
-    cSp->SaveAs("pthat_SUM_Weight.png","RECREATE");
+    saveName="PNG/pthat_SUM_Weight_"+prefix+".png";
+    cSp->SaveAs(saveName.c_str(),"RECREATE");
   }
   if(bhpthat){
     TH1D * hpthat = (TH1D*)f->Get("hpthat");
@@ -60,40 +67,40 @@ void jtptWeightPlot(){
     cp->cd();
     cp->SetLogy();
     hpthat->Draw();
-    cp->SaveAs("pthat_NO_Weight.png","RECREATE");
+    saveName="PNG/pthat_NO_Weight_"+prefix+".png";
+    cp->SaveAs(saveName.c_str(),"RECREATE");
   }
-  if(bJetRatio){
-    TH1D * Jet2 = (TH1D*)f->Get("Jet2");
-    TH1D * Jet3 = (TH1D*)f->Get("Jet3");
-    TCanvas * cJR = new TCanvas("cJR","",600,600);
-    cJR->cd();
-    TH1D * ratio = new TH1D("ratio","3-Jet Events /2-Jet Events Ratio",100,0,500);
-    ratio->Add(Jet3);
-    ratio->Divide(Jet2);
-    ratio->Draw();
-    cJR->SaveAs("JR_SUM_Weight.png","RECREATE");
+  if(bJetRatio_pT){
+    TH1D * Jet2_pT = (TH1D*)f->Get("Jet2_pT_HI");
+    TH1D * Jet3_pT = (TH1D*)f->Get("Jet3_pT_HI");
+    TCanvas * cJR_pT = new TCanvas("cJR_pT","",600,600);
+    cJR_pT->cd();
+    TH1D * ratio_pT = new TH1D("ratio_pT","Med1 PbPb 3-Jet Events /2-Jet Events Ratio;Leading Jet P_{T} (GeV)",100,0,500);
+    ratio_pT->Add(Jet3_pT);
+    ratio_pT->Divide(Jet2_pT);
+    ratio_pT->SetMarkerStyle(20);
+    ratio_pT->SetMarkerColor(kBlack);
+    ratio_pT->SetYTitle("R_{32}");
+    ratio_pT->Draw();
+    saveName="PNG/JR_pT_"+prefix+".png";
+    cJR_pT->SaveAs(saveName.c_str(),"RECREATE");
   }
-  if(bNJetRatio){
-    TH1D * nJet2 = (TH1D*)f->Get("Jet2");
-    TH1D * nJet3 = (TH1D*)f->Get("Jet3");
-    TCanvas * cnJR = new TCanvas("cnJR","",600,600);
-    cnJR->cd();
-    TH1D * Nratio = new TH1D("Nratio","NREF 3-Jet Events /2-Jet Events Ratio",100,0,500);
-    Nratio->Add(nJet3);
-    Nratio->Divide(nJet2);
-    Nratio->Draw();
-    cnJR->SaveAs("NREF_JR_SUM_Weight.png","RECREATE");
+  if(bJetRatio_hT){
+
+    TH1D * Jet2_hT = (TH1D*)f->Get("Jet2_hT_HI");
+    TH1D * Jet3_hT = (TH1D*)f->Get("Jet3_hT_HI");
+    TCanvas * cJR_hT = new TCanvas("cJR_hT","",600,600);
+    cJR_hT->cd();
+    TH1D * ratio_hT = new TH1D("ratio_hT","Med1 PbPb 3-Jet Events /2-Jet Events Ratio;H_{T} (GeV)",100,0,500);
+    ratio_hT->Add(Jet3_hT);
+    ratio_hT->Divide(Jet2_hT);
+    ratio_hT->SetMarkerStyle(20);
+    ratio_hT->SetMarkerColor(kBlack);
+    ratio_hT->SetYTitle("R_{32}");
+    ratio_hT->Draw();
+    saveName="PNG/JR_hT_"+prefix+".png";
+    cJR_hT->SaveAs(saveName.c_str(),"RECREATE");
   }
-  if(bNref){
-    TH1D * Hnref = (TH1D*)f->Get("Hnref");
-    TCanvas * cNR = new TCanvas("cNR","",600,600);
-    cNR->cd();
-    Hnref->Scale(1./Hnref->GetEntries());
-    Hnref->SetXTitle("nref");
-    Hnref->SetYTitle("Event Fraction");
-    Hnref->GetYaxis()->SetTitleOffset(1.5);
-    Hnref->Draw();
-    cNR->SaveAs("NREF.png","RECREATE");
-  }
+
 
 }

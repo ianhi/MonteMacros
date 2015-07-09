@@ -37,127 +37,156 @@
 TStopwatch timer;
 
 void ppWeight(const int startfile=0,int endfile=-1){
-  bool DEBUG=true;
+  bool DEBUG=false;//Will dramatically increase time if runnign all events
+  bool DEBUG_SHORT=false;//if true will run over only 100 events per file
   
   timer.Start();
-
-
-
-  //create the trees and set the branch address
-  //jet tree
-  int nrefe;
-  float jtpt[1000];
-  //float old_pt3[1000];
-  float raw[1000];
-  float eta[1000];
-  float phi[1000];
-  //event tree
+  TH1::SetDefaultSumw2();
+  
+  //Variables===================================================
+  int nref;//number of jets in an event
+  float jtpt[1000];//jet pt array
+  float hT; // scale sum of jet pT
   int evt;
   int run;
   int lumi;
   float vz;
+
   Double_t pthatweight;
   Float_t varpthat;
 
-  TH1::SetDefaultSumw2();
+  //To Scale Histograms- Can't do GetEntries() as that does not accoutn for weighting
+  Double Scale_Jet2=0; 
+  Double Scale_Jet3=0;
+
+
+  //SET UP FILE LIST==========================================
   std::string infile;
-  infile = "jetRAA_pp_mc_forest.txt";
+  infile = "TEXTFILES/jetRAA_pp_mc_forest.txt";
   cout<<"\n\nReading from: "+infile<<endl;
   std::ifstream instr(infile.c_str(), std::ifstream::in);
  
+  //If number of files to read not specified then read how many lines are in file
   if(endfile==-1){
     std::ifstream fi(infile.c_str());
     std::string line;
     int number_of_lines=0;
-    while (std::getline(fi, line))
-      {
-	++number_of_lines;
-      }
-    endfile+=number_of_lines;//-1 accounts for line telling medium type.
+    while (std::getline(fi, line)) ++number_of_lines;
+    endfile+=number_of_lines+1;
     cout<<"You did not specify number of files will run on all: "<<endfile<<" lines\n";
   }
-  std::string filename;
 
+  // If not starting from file 0 discard earlier lines
+  std::string filename;
   cout<<"reading from "<<startfile<<" to "<<endfile<<endl;  
   for(int ifile=0;ifile<startfile;ifile++){ 
     instr >> filename;
   }
+  cout<<"Running on "<<endfile-startfile<<" forest files"<<endl;
 
-  int nFiles = endfile - startfile;
-  cout<<"Running on "<<nFiles<<" forest files"<<endl;
-
-
-
-  //output file:
-  TFile f(Form("pp_weight_%d.root",endfile),"RECREATE");
-  // declare the output histograms/ntuples or whatever you want
-  TH1F * hvz = new TH1F("hvz","",40,-20, 20);
+  //DEFINE OUTPUT FILE===========================================
+  TFile f(Form("ROOT/pp_weight_%d.root",endfile),"RECREATE");
  
-  TH1D * Jet2 = new TH1D("Jet2","2-Jet;Leading Jet pt",100,0,500);
-  TH1D * Jet3 = new TH1D("Jet3","3-Jet;Leading Jet pt",100,0,500);  
+  //DEFINE HISTOGRAMS=============================================
+  TH1D *Jet2_hT = new TH1D("Jet2_hT_pp","pT>=30 2-Jet;H_{T} (GeV)",100,0,500);
+  TH1D *Jet3_hT = new TH1D("Jet3_hT_pp","pT>=30 3-Jet;H_{T} (GeV)",100,0,500);
 
-  //==============ACTUALLY READ FILES=============
-  stringstream weightName;
+  TH1D *Jet2_pT = new TH1D("Jet2_hT_pp","pT>=30 2-Jet;Leading Jet P_{T} (GeV)",100,0,500);
+  TH1D *Jet3_pT = new TH1D("Jet3_hT_pp","pT>=30 3-Jet;Leading Jet P_{T} (GeV)",100,0,500);
+
+
+
+  //READ FILES====================================================
+  stringstream weightName;//stringstream allows easy concat of str and int
   for(int ifile=startfile;ifile<endfile;ifile++){
     instr >> filename;
     weightName.str(""); weightName<<"weights/weights_pp_"<<ifile+1<<".root";
  
     if(DEBUG) cout<<"ifile: "<<ifile<<"\nFile: "<<filename<<endl<<"weightFile: "<<weightName.str()<<"\n\n";
-
-    TFile *fin = TFile::Open(filename.c_str());
-    TFile *wFile= TFile::Open(weightName.str().c_str());
-
+    //OPEN INPUT FILES======================================
+    TFile *fin = TFile::Open(filename.c_str());//data file
+    TFile *wFile= TFile::Open(weightName.str().c_str());//corresponding pthat weight
+    //GET TREES==================================================
     TTree* jetTree = (TTree*)fin->Get("akPu3PFJetAnalyzer/t");
     TTree* skimTree_in = (TTree*)fin->Get("skimanalysis/HltTree");
     TTree* evtTree_in = (TTree*)fin->Get("hiEvtAnalyzer/HiTree");
     TTree* hltTree_in = (TTree*)fin->Get("hltanalysis/HltTree");
     TTree* weights = (TTree*)wFile->Get("weights");
 
-    //ADD FRIENDS
+    //ADD FRIENDS================================================
     jetTree->AddFriend(weights);
     jetTree->AddFriend(evtTree_in);
 
 
-    //SET BRANCH ADDRESSES
+    //SET BRANCH ADDRESSES=======================================
     jetTree->SetBranchAddress("evt",&evt);
     jetTree->SetBranchAddress("run",&run);
     jetTree->SetBranchAddress("lumi",&lumi);
     jetTree->SetBranchAddress("vz",&vz);
-    jetTree->SetBranchAddress("nref",&nrefe);
+    jetTree->SetBranchAddress("nref",&nref);
     jetTree->SetBranchAddress("jtpt",&jtpt);
-    jetTree->SetBranchAddress("jteta",&eta);
-    jetTree->SetBranchAddress("jtphi",&phi);
     jetTree->SetBranchAddress("pthat",&varpthat);
     jetTree->SetBranchAddress("pthatweight",&pthatweight);
 
 
 
-    Long64_t nentries = jetTree->GetEntries();
+    //LOOP OVER EVENTS============================================
 
-    if(DEBUG)nentries = 100;
+    Long64_t nentries = jetTree->GetEntries();
+    if(DEBUG_SHORT)nentries = 100;
+
     for (int i = 0; i < nentries; i++){ //start of event loop.
       jetTree->GetEntry(i);
-
-      if(DEBUG){
-	cout<<"pthatweight: "<<pthatweight<<endl;
-      }
       if(i%1000==0)cout<<"event = "<<i<<"; run = "<<run<<endl;
-      // apply your event selection cuts here:
+      // SELECTION CUTS--------------------------------------
       if(fabs(vz)>15) continue;
       hvz->Fill(vz);
-      // jet loop
+
+      //SET UP FOR FILLING------------------------------------
+      bool skip2=false;//Ensures 3-Jet events aren't also counted as 2-Jet events
+      hT=0; // Scalar Sum of jet pT
+      for(int g = 0; g<nref; ++g) hT+=jtpt[g];
+
+      //FILL HISTOGRAMS----------------------------------
+      if(jtpt[2]>=30){ //If a three or more jet Event
+	Jet3_pT->Fill(jtpt[0],pthatweight);
+	Jet3_hT->Fill(hT,pthatweight);
+	Scale_Jet3+=pthatweight;
+	skip2=true;
+      }
+      if(jtpt[1]>=30 && !skip2) {//if a 2-Jet Event
+	Jet2_pT->Fill(jtpt[0],pthatweight);
+	Jet2_hT->Fill(hT,pthatweight);
+	Scale_Jet3+=pthatweight;
+      }
+      /*
       for(int g = 0; g<nrefe; ++g){
 	// fill your jet histograms here:
-	bool skip2=false;
-	if(nrefe==3){ Jet3->Fill(jtpt[0],pthatweight); skip2=true;}
-	if(nrefe==2 && !skip2) Jet2->Fill(jtpt[0],pthatweight);
 
-      }
+		
+	if(DEBUG) {
+	  cout<<"Jet 3 Entries pT>=30: "<<Jet3->GetEntries()<<endl;
+	  cout<<"nJet 3 Entries: "<<nJet3->GetEntries()<<endl<<endl;
+            
+	  cout<<"Jet 2 Entries  pT>=30: "<<Jet2->GetEntries()<<endl;
+	  cout<<"nJet 2 Entries: "<<nJet2->GetEntries()<<"\n==========================="<<endl<<endl;
+	  }
+      }//jet loop
+      */
     }// event loop
     fin->Close();
   }//end of file loop
- f.cd();
- f.Write();
- f.Close();  
+
+  //SCALE HISTOGRAMS==========================================
+  Jet2_pT->Scale(1./Scale_Jet2);
+  Jet3_pT->Scale(1./Scale_Jet3);
+
+  Jet2_hT->Scale(1./Scale_Jet2);
+  Jet3_hT->Scale(1./Scale_Jet3);
+
+  //WRITE OUTPUT FILE===========================================
+  f.cd();
+  f.Write();
+  f.Close();  
 
 }
