@@ -1,9 +1,24 @@
 '''
 Ian Hunt-Isaak
 ihuntisa@oberlin.edu -Primary email un may 2017
-ianhuntisaak@gmail.com - permanent email
+ianhuntisaak@gmail.com - Permanent email
 
+This file extracts the sum of cross section weights from the below section of the Jewel out.log file. SUM = sum of all cross sections. QCD =  f + f' -> f + f' cross section
 
+          ==========================================================
+           I                                      I                 I
+           I  ISUB  Subprocess name               I  Maximum value  I
+           I                                      I                 I
+           ==========================================================
+           I                                      I                 I
+           I   11   f + f' -> f + f' (QCD)        I    3.0909D+05   I
+           I   12   f + fbar -> f' + fbar'        I    6.6762D+03   I
+           I   13   f + fbar -> g + g             I    3.1201D+03   I
+           I   28   f + g -> f + g                I    3.4405D+05   I
+           I   53   g + g -> f + fbar             I    2.5473D+03   I
+           I   68   g + g -> g + g                I    5.2598D+04   I
+           I                                      I                 I
+           ==========================================================
 
 '''
 import sys
