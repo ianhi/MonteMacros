@@ -1,3 +1,15 @@
+/* 
+Ian Hunt-Isaak
+ihuntisa@oberlin.edu -Primary email un may 2017
+ianhuntisaak@gmail.com - permanent email
+
+This file is to check how nref is defined for the root files produced by the cms framework job set originally set up by yenjie: https://twiki.cern.ch/twiki/pub/CMS/HighPt2014/140807-yenjie-HighPt.pdf
+
+Easy set up here: https://github.com/ianhi/GeneratorInterface
+
+result:
+nref is number of reconstructed jets with no pt cut
+*/
 #include <iostream>
 #include <fstream>
 #include <TH1F.h>

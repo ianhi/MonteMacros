@@ -1,3 +1,11 @@
+'''
+Ian Hunt-Isaak
+ihuntisa@oberlin.edu -Primary email un may 2017
+ianhuntisaak@gmail.com - permanent email
+
+
+
+'''
 import sys
 f = open('out.txt', 'w')
 minFile=0
