@@ -35,6 +35,8 @@
 #include <TString.h>
 
 Float_t jtpt[1000];//jet pt taken from dijet/t
+Float_t jtpt[1000];
+Float_t vz;
 Int_t nref; //believe this to be the number of jets per event - variable in dijet/nt
 Float_t varpthat; // pthat variable to be set with SetBranchAddress
 float hT;
@@ -85,7 +87,9 @@ void jtptWeight(){
   //SET BRANCH ADDRESSES-------------------------------
   ntChain->SetBranchAddress("pthat",&varpthat);
   tChain->SetBranchAddress("jtpt",jtpt);
+  tChain->SetBranchAddress("jeta",jeta);
   tChain->SetBranchAddress("nref",&nref);
+  jetTree->SetBranchAddress("vz",&vz);
 
   //PTHAT WEIGHTING SETUP======================================================
   double pthatBinning[] = {15,30,50,80,120,170,220,280,330,400,460,540};
@@ -161,6 +165,10 @@ void jtptWeight(){
   for(int ie = 0; ie < tChain->GetEntries(); ++ie){//Event loop
     tChain->GetEntry(ie);
 
+
+    //Selection Cuts=======================
+
+    
     //Calculate Weights====================
     for(int i = 0; i < Npt; ++i){
       if(n[i] > 0 && varpthat >= pthats[i]) {
