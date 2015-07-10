@@ -54,7 +54,7 @@ void jtptWeight(){
   double pthatweightS = 0;//weight for just SUM xs
 
   std::string prefix;
-  prefix="med1";
+  prefix="med5";
   std::string infile;
   infile = "TEXTFILES/"+prefix+"_fileList.txt";
 
@@ -116,7 +116,7 @@ void jtptWeight(){
 
   
   //DEFINE OUTPUT FILE===========================================
-  std::string outName="ROOT/"+prefix+"_weights.root";
+  std::string outName="ROOT/Jewel/"+prefix+"_weights.root";
   TFile * outf = new TFile(outName.c_str(),"recreate");
 
 
@@ -124,25 +124,36 @@ void jtptWeight(){
   //------Weighting jtpt and pthat histograms----------------
  
   std::string title;
+  std::string name;
   title=prefix+" QCD cross Section - jtpt;jtpt";
-  TH1D * Qjtpt = new TH1D("Qjtpt",title.c_str(),20,0,460);
+  name=prefix+"_Qjtpt";
+  TH1D * Qjtpt = new TH1D(name.c_str(),title.c_str(),20,0,460);
   title=prefix+" SUM cross Section - jtpt;jtpt";
-  TH1D * Sjtpt = new TH1D("Sjtpt",title.c_str(),20,0,460);
+  name=prefix+"_Sjtpt";
+  TH1D * Sjtpt = new TH1D(name.c_str(),title.c_str(),20,0,460);
   title=prefix+" QCD cross Section - PTHAT; pthat";
-  TH1D * hQpthat = new TH1D("hQpthat",title.c_str(),500,0,500);
+  name=prefix+"_hQpthat";
+  TH1D * hQpthat = new TH1D(name.c_str(),title.c_str(),500,0,500);
   title=prefix+" SUM cross Section-PTHAT; pthat";
-  TH1D * hSpthat = new TH1D("hSpthat",title.c_str(),500,0,500);
+  name=prefix+"_hSpthat";
+  TH1D * hSpthat = new TH1D(name.c_str(),title.c_str(),500,0,500);
   title=prefix+" UnWeighted counts - PTHAT; pthat";
-  TH1D * hpthat = new TH1D("hpthat",title.c_str(),500,0,500);
+  name=prefix+"_hpthat"; 
+  TH1D * hpthat = new TH1D(name.c_str(),title.c_str(),500,0,500);
   //------Jet Ratio Histograms--------------------------------
+
   title=prefix+" 2-Jet;Leading Jet P_{T} (GeV)";
-  TH1D *Jet2_pT = new TH1D("Jet2_pT_HI",title.c_str(),100,0,500);
+  name=prefix+"_Jet2_pT_HI";
+  TH1D *Jet2_pT = new TH1D(name.c_str(),title.c_str(),100,0,500);
   title=prefix+" 3-Jet;Leading Jet P_{T} (GeV)";
-  TH1D *Jet3_pT = new TH1D("Jet3_pT_HI",title.c_str(),100,0,500);
+  name=prefix+"_Jet3_pT_HI";
+  TH1D *Jet3_pT = new TH1D(name.c_str(),title.c_str(),100,0,500);
   title=prefix+" 2-Jet;H_{T} (GeV)";
-  TH1D *Jet2_hT = new TH1D("Jet2_hT_HI",title.c_str(),100,0,500);
+  name=prefix+"_Jet2_hT_HI";
+  TH1D *Jet2_hT = new TH1D(name.c_str(),title.c_str(),100,0,500);
   title=prefix+" 3-Jet;H_{T} (GeV)";
-  TH1D *Jet3_hT = new TH1D("Jet3_hT_HI",title.c_str(),100,0,500); 
+  name=prefix+"_Jet3_hT_HI";
+  TH1D *Jet3_hT = new TH1D(name.c_str(),title.c_str(),100,0,500); 
 
 
 
