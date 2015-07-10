@@ -13,7 +13,9 @@
 void jtptWeightPlotCheck(){
   TH1::SetDefaultSumw2();
   gStyle->SetOptStat(0);
-  TFile *f = TFile::Open(Form("weights.root"));
+  std::string prefix="med5";
+  std::string filename="ROOT/"+prefix+"_weights.root";
+  TFile *f = TFile::Open(filename.c_str());
 
 
   TLegend *leg = new TLegend(0.7,0.5,0.99,0.9);

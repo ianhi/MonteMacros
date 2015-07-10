@@ -116,7 +116,7 @@ void jtptWeight(){
 
   
   //DEFINE OUTPUT FILE===========================================
-  std::string outName=prefix+"_weights.root";
+  std::string outName="ROOT/"+prefix+"_weights.root";
   TFile * outf = new TFile(outName.c_str(),"recreate");
 
 

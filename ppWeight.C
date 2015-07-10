@@ -56,8 +56,8 @@ void ppWeight(const int startfile=0,int endfile=-1){
   Float_t varpthat;
 
   //To Scale Histograms- Can't do GetEntries() as that does not accoutn for weighting
-  Double Scale_Jet2=0; 
-  Double Scale_Jet3=0;
+  double Scale_Jet2=0; 
+  double Scale_Jet3=0;
 
 
   //SET UP FILE LIST==========================================
@@ -91,8 +91,8 @@ void ppWeight(const int startfile=0,int endfile=-1){
   TH1D *Jet2_hT = new TH1D("Jet2_hT_pp","pT>=30 2-Jet;H_{T} (GeV)",100,0,500);
   TH1D *Jet3_hT = new TH1D("Jet3_hT_pp","pT>=30 3-Jet;H_{T} (GeV)",100,0,500);
 
-  TH1D *Jet2_pT = new TH1D("Jet2_hT_pp","pT>=30 2-Jet;Leading Jet P_{T} (GeV)",100,0,500);
-  TH1D *Jet3_pT = new TH1D("Jet3_hT_pp","pT>=30 3-Jet;Leading Jet P_{T} (GeV)",100,0,500);
+  TH1D *Jet2_pT = new TH1D("Jet2_pT_pp","pT>=30 2-Jet;Leading Jet P_{T} (GeV)",100,0,500);
+  TH1D *Jet3_pT = new TH1D("Jet3_pT_pp","pT>=30 3-Jet;Leading Jet P_{T} (GeV)",100,0,500);
 
 
 
@@ -140,7 +140,6 @@ void ppWeight(const int startfile=0,int endfile=-1){
       if(i%1000==0)cout<<"event = "<<i<<"; run = "<<run<<endl;
       // SELECTION CUTS--------------------------------------
       if(fabs(vz)>15) continue;
-      hvz->Fill(vz);
 
       //SET UP FOR FILLING------------------------------------
       bool skip2=false;//Ensures 3-Jet events aren't also counted as 2-Jet events

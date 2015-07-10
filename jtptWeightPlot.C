@@ -22,7 +22,7 @@ void jtptWeightPlot(){
   TH1::SetDefaultSumw2();
   gStyle->SetOptStat(0);
   std::string prefix="med1";
-  std::string filename=prefix+"_weights.root";
+  std::string filename="ROOT/"+prefix+"_weights.root";
   std::string saveName;
   TFile *f = TFile::Open(filename.c_str());
   if(bQjtpt){
