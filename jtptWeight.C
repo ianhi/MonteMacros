@@ -33,6 +33,7 @@
 #include <TH1D.h>
 #include <TH2D.h>
 #include <TString.h>
+#include <cmath>
 
 Float_t jtpt[1000];//jet pt taken from dijet/t
 Float_t jteta[1000];
@@ -45,13 +46,13 @@ void jtptWeight(){
   cout<<"\n\n\n\n\n";
   bool DEBUG=true;
   bool DEBUGLONG=false;//true -> much longer runtime OR lots of output
-  bool DRAW=true;
   TH1::SetDefaultSumw2();
 
   double Scale_Jet2=0;  
   double Scale_Jet3=0;
   TChain* tChain;
   TChain* ntChain;
+  TChain* nt2Chain;
   double pthatweightQ = 0;//weight for just QCD xs
   double pthatweightS = 0;//weight for just SUM xs
 
@@ -73,6 +74,7 @@ void jtptWeight(){
   std::string filename;
   tChain = new TChain("dijet/t");
   ntChain = new TChain("dijet/nt"); 
+  nt2Chain = new TChain("ana/hi");
   for(int i=0;i<number_of_lines;i++){
     instr >> filename;
     tChain->AddFile(filename.c_str());
@@ -83,13 +85,13 @@ void jtptWeight(){
   
   //ADD FRIEND------------------------
   tChain->AddFriend(ntChain);
-  
+  tChain->AddFriend(nt2Chain);  
   //SET BRANCH ADDRESSES-------------------------------
   ntChain->SetBranchAddress("pthat",&varpthat);
+  nt2Chain->SetBranchAddress("vz",&vz);
   tChain->SetBranchAddress("jtpt",jtpt);
   tChain->SetBranchAddress("jteta",jteta);
   tChain->SetBranchAddress("nref",&nref);
-  jetTree->SetBranchAddress("vz",&vz);
 
   //PTHAT WEIGHTING SETUP======================================================
   double pthatBinning[] = {15,30,50,80,120,170,220,280,330,400,460,540};
@@ -167,7 +169,7 @@ void jtptWeight(){
 
 
     //Selection Cuts=======================
-    if(TMath::abs(vz) > 15) continue;
+    if(TMath::Abs(vz) > 15) continue;
     
     //Calculate Weights====================
     for(int i = 0; i < Npt; ++i){
@@ -190,16 +192,18 @@ void jtptWeight(){
     //JET RATIO HISTOGRAMS-------------------------------
     bool skip2 =false;//to ensure that 3 jet events aren't also counted as 2-jet events
     hT=0;//scalar sum of jet pt
-    for(int g = 0; g<nref; ++g) hT+=jtpt[g];
+    for(int g = 0; g<nref; ++g){
+      if(fabs(jteta[g])>2.0) continue;
+      hT+=jtpt[g];
+    }
     
-    if(jtpt[2]>=30){
-
+    if(jtpt[2]>=30 && fabs(jteta[2])<2.0){
       Jet3_pT->Fill(jtpt[0],pthatweightS);
       Jet3_hT->Fill(hT,pthatweightS);
       Scale_Jet3+=pthatweightS;
       skip2=true;
     }
-    if(jtpt[1]>=30 && !skip2) {
+    if(jtpt[1]>=30 && fabs(jteta[2])<2.0 && !skip2) {
       Jet2_pT->Fill(jtpt[0],pthatweightS);
       Jet2_hT->Fill(hT,pthatweightS);
       Scale_Jet2+=pthatweightS;
@@ -208,7 +212,7 @@ void jtptWeight(){
     for(int i = 0; i < nref; ++i){//Jet loop
 
       //Selection Cuts=======================
-      if(TMath::abs(jteta[i]) > 2) continue;
+      if(TMath::Abs(jteta[i]) > 2) continue;
       
       //jet pt histograms-----------------
       Qjtpt->Fill(jtpt[i],pthatweightQ);
