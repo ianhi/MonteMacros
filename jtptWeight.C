@@ -35,7 +35,7 @@
 #include <TString.h>
 
 Float_t jtpt[1000];//jet pt taken from dijet/t
-Float_t jtpt[1000];
+Float_t jteta[1000];
 Float_t vz;
 Int_t nref; //believe this to be the number of jets per event - variable in dijet/nt
 Float_t varpthat; // pthat variable to be set with SetBranchAddress
@@ -87,7 +87,7 @@ void jtptWeight(){
   //SET BRANCH ADDRESSES-------------------------------
   ntChain->SetBranchAddress("pthat",&varpthat);
   tChain->SetBranchAddress("jtpt",jtpt);
-  tChain->SetBranchAddress("jeta",jeta);
+  tChain->SetBranchAddress("jteta",jteta);
   tChain->SetBranchAddress("nref",&nref);
   jetTree->SetBranchAddress("vz",&vz);
 
@@ -167,7 +167,7 @@ void jtptWeight(){
 
 
     //Selection Cuts=======================
-
+    if(TMath::abs(vz) > 15) continue;
     
     //Calculate Weights====================
     for(int i = 0; i < Npt; ++i){
@@ -191,8 +191,9 @@ void jtptWeight(){
     bool skip2 =false;//to ensure that 3 jet events aren't also counted as 2-jet events
     hT=0;//scalar sum of jet pt
     for(int g = 0; g<nref; ++g) hT+=jtpt[g];
-
+    
     if(jtpt[2]>=30){
+
       Jet3_pT->Fill(jtpt[0],pthatweightS);
       Jet3_hT->Fill(hT,pthatweightS);
       Scale_Jet3+=pthatweightS;
@@ -205,6 +206,10 @@ void jtptWeight(){
     }
 
     for(int i = 0; i < nref; ++i){//Jet loop
+
+      //Selection Cuts=======================
+      if(TMath::abs(jteta[i]) > 2) continue;
+      
       //jet pt histograms-----------------
       Qjtpt->Fill(jtpt[i],pthatweightQ);
       Sjtpt->Fill(jtpt[i],pthatweightS); 
