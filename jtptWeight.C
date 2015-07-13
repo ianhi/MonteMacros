@@ -57,7 +57,7 @@ void jtptWeight(){
   double pthatweightS = 0;//weight for just SUM xs
 
   std::string prefix;
-  prefix="med5";
+  prefix="med4";
   std::string infile;
   infile = "TEXTFILES/"+prefix+"_fileList.txt";
 
@@ -89,8 +89,8 @@ void jtptWeight(){
   //SET BRANCH ADDRESSES-------------------------------
   ntChain->SetBranchAddress("pthat",&varpthat);
   nt2Chain->SetBranchAddress("vz",&vz);
-  tChain->SetBranchAddress("jtpt",jtpt);
-  tChain->SetBranchAddress("jteta",jteta);
+  tChain->SetBranchAddress("jtpt",&jtpt);
+  tChain->SetBranchAddress("jteta",&jteta);
   tChain->SetBranchAddress("nref",&nref);
 
   //PTHAT WEIGHTING SETUP======================================================
@@ -163,7 +163,7 @@ void jtptWeight(){
 
 
 
-  //LOOP OVER EVENTS In TCHAIN===============================
+  //LOOP OVER EVENTS IN TCHAIN===============================
   for(int ie = 0; ie < tChain->GetEntries(); ++ie){//Event loop
     tChain->GetEntry(ie);
 
@@ -191,20 +191,25 @@ void jtptWeight(){
     hpthat->Fill(varpthat);
     //JET RATIO HISTOGRAMS-------------------------------
     bool skip2 =false;//to ensure that 3 jet events aren't also counted as 2-jet events
+    Float_t etaGood[1000]; // ensures that jet 2 isn't outside eta range
+    int goodIndex=0;
     hT=0;//scalar sum of jet pt
     for(int g = 0; g<nref; ++g){
-      if(fabs(jteta[g])>2.0) continue;
+      if(fabs(jteta[g])>=2.0) continue;
+      //cout<<"jtpt["<<g<<"]: "<<jtpt[g]<<endl;
+      etaGood[goodIndex]=jtpt[g];
+      //   cout<<"etaGood["<<goodIndex<<"]: "<<etaGood[goodIndex]<<endl;
+      goodIndex++;
       hT+=jtpt[g];
     }
-    
-    if(jtpt[2]>=30 && fabs(jteta[2])<2.0){
-      Jet3_pT->Fill(jtpt[0],pthatweightS);
+    if(etaGood[2]>=30 && etaGood[3]<30){
+      Jet3_pT->Fill(etaGood[0],pthatweightS);
       Jet3_hT->Fill(hT,pthatweightS);
       Scale_Jet3+=pthatweightS;
       skip2=true;
     }
-    if(jtpt[1]>=30 && fabs(jteta[2])<2.0 && !skip2) {
-      Jet2_pT->Fill(jtpt[0],pthatweightS);
+    if(etaGood[1]>=30 && !skip2) {
+      Jet2_pT->Fill(etaGood[0],pthatweightS);
       Jet2_hT->Fill(hT,pthatweightS);
       Scale_Jet2+=pthatweightS;
     }
@@ -224,13 +229,13 @@ void jtptWeight(){
  
   }//end event loop
  
-  //SCALE HISTOGRAMS=================================
+    //SCALE HISTOGRAMS=================================
   Jet2_pT->Scale(1./Scale_Jet2);
   Jet3_pT->Scale(1./Scale_Jet2);
 
   Jet2_hT->Scale(1./Scale_Jet2);
   Jet3_hT->Scale(1./Scale_Jet3);
-
+  
   //WRITE OUTPUT FILE============================
   outf->cd();
   outf->Write();

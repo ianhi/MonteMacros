@@ -21,7 +21,7 @@ void jtptWeightPlot(){
 
   TH1::SetDefaultSumw2();
   gStyle->SetOptStat(0);
-  std::string prefix="med5";
+  std::string prefix="med4";
   std::string filename="ROOT/Jewel/"+prefix+"_weights.root";
   std::string saveName;
   TFile *f = TFile::Open(filename.c_str());
@@ -75,7 +75,7 @@ void jtptWeightPlot(){
     TH1D * Jet3_pT = (TH1D*)f->Get((prefix+"_Jet3_pT_HI").c_str());
     TCanvas * cJR_pT = new TCanvas("cJR_pT","",600,600);
     cJR_pT->cd();
-    TH1D * ratio_pT = new TH1D("ratio_pT","Med1 PbPb 3-Jet Events /2-Jet Events Ratio;Leading Jet P_{T} (GeV)",100,0,500);
+    TH1D * ratio_pT = new TH1D("ratio_pT",(prefix+" PbPb 3-Jet Events /2-Jet Events Ratio;Leading Jet P_{T} (GeV)").c_str(),100,0,500);
     ratio_pT->Add(Jet3_pT);
     ratio_pT->Divide(Jet2_pT);
     ratio_pT->SetMarkerStyle(20);
@@ -86,12 +86,11 @@ void jtptWeightPlot(){
     cJR_pT->SaveAs(saveName.c_str(),"RECREATE");
   }
   if(bJetRatio_hT){
-
     TH1D * Jet2_hT = (TH1D*)f->Get((prefix+"_Jet2_hT_HI").c_str());
     TH1D * Jet3_hT = (TH1D*)f->Get((prefix+"_Jet3_hT_HI").c_str());
     TCanvas * cJR_hT = new TCanvas("cJR_hT","",600,600);
     cJR_hT->cd();
-    TH1D * ratio_hT = new TH1D("ratio_hT","Med1 PbPb 3-Jet Events /2-Jet Events Ratio;H_{T} (GeV)",100,0,500);
+    TH1D * ratio_hT = new TH1D("ratio_hT",(prefix+" PbPb 3-Jet Events /2-Jet Events Ratio;H_{T} (GeV)").c_str(),100,0,500);
     ratio_hT->Add(Jet3_hT);
     ratio_hT->Divide(Jet2_hT);
     ratio_hT->SetMarkerStyle(20);

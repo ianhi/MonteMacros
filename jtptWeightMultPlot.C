@@ -72,11 +72,11 @@ void jtptWeightMultPlot(){
   TH1D * ratio_hT[prefixLength];
 
   TCanvas * cpT = new TCanvas("cpT","",600,600);
-  TH2D * h0_PT =  new TH2D("h0_PT","PbPb 3-Jet Events /2-Jet Events Ratio;Leading Jet P_{T} (GeV)",20,0,500,2000,0,2);
+  TH2D * h0_PT =  new TH2D("h0_PT","PbPb 3-Jet Events /2-Jet Events Ratio;Leading Jet P_{T} (GeV)",20,0,500,2000,0,1.2);
   h0_PT->SetYTitle("R_{32}");
   h0_PT->Draw();
   TCanvas * chT = new TCanvas("chT","",600,600);
-  TH2D * h0_HT =  new TH2D("h0_HT","PbPb 3-Jet Events /2-Jet Events Ratio;H_{T} (GeV)",20,0,500,2000,0,5);
+  TH2D * h0_HT =  new TH2D("h0_HT","PbPb 3-Jet Events /2-Jet Events Ratio;H_{T} (GeV)",20,0,500,2000,0,2.5);
   h0_HT->SetYTitle("R_{32}");
   h0_HT->Draw();
   

@@ -38,7 +38,7 @@ TStopwatch timer;
 
 void ppWeight(const int startfile=0,int endfile=-1){
   bool DEBUG=false;//Will dramatically increase time if runnign all events
-  bool DEBUG_SHORT=false;//if true will run over only 100 events per file
+  bool DEBUG_SHORT=true;//if true will run over only 100 events per file
   
   timer.Start();
   TH1::SetDefaultSumw2();
@@ -46,6 +46,7 @@ void ppWeight(const int startfile=0,int endfile=-1){
   //Variables===================================================
   int nref;//number of jets in an event
   float jtpt[1000];//jet pt array
+  float jteta[1000];
   float hT; // scale sum of jet pT
   int evt;
   int run;
@@ -94,7 +95,8 @@ void ppWeight(const int startfile=0,int endfile=-1){
   TH1D *Jet2_pT = new TH1D("Jet2_pT_pp","pT>=30 2-Jet;Leading Jet P_{T} (GeV)",100,0,500);
   TH1D *Jet3_pT = new TH1D("Jet3_pT_pp","pT>=30 3-Jet;Leading Jet P_{T} (GeV)",100,0,500);
 
-
+  TH1D * hPTHAT = new TH1D("pthat_pp","pp PTHAT weighted",500,0,500);
+  TH1D * hJTPT = new TH1D("jtpt_pp","pp JTPT weighted",500,0,500);
 
   //READ FILES====================================================
   stringstream weightName;//stringstream allows easy concat of str and int
@@ -127,6 +129,7 @@ void ppWeight(const int startfile=0,int endfile=-1){
     jetTree->SetBranchAddress("jtpt",&jtpt);
     jetTree->SetBranchAddress("pthat",&varpthat);
     jetTree->SetBranchAddress("pthatweight",&pthatweight);
+    jetTree->SetBranchAddress("jteta",&jteta);
 
 
 
@@ -143,47 +146,45 @@ void ppWeight(const int startfile=0,int endfile=-1){
 
       //SET UP FOR FILLING------------------------------------
       bool skip2=false;//Ensures 3-Jet events aren't also counted as 2-Jet events
+      Float_t etaGood[1000]; // ensures that jet 2 isn't outside eta range
+      int goodIndex=0;
       hT=0; // Scalar Sum of jet pT
-      for(int g = 0; g<nref; ++g) hT+=jtpt[g];
-
+      
+      for(int g = 0; g<nref; ++g){
+	if(fabs(jteta[g])>=2.0) continue;
+	etaGood[goodIndex]=jtpt[g];
+	goodIndex++;
+	hT+=jtpt[g];
+	hJTPT->Fill(jtpt[g],pthatweight);
+      }
       //FILL HISTOGRAMS----------------------------------
-      if(jtpt[2]>=30){ //If a three or more jet Event
-	Jet3_pT->Fill(jtpt[0],pthatweight);
+      hPTHAT->Fill(varpthat,pthatweight);
+
+      if(etaGood[2]>=30 && etaGood[3]<30){ //If a three or more jet Event
+	Jet3_pT->Fill(etaGood[0],pthatweight);
 	Jet3_hT->Fill(hT,pthatweight);
 	Scale_Jet3+=pthatweight;
 	skip2=true;
       }
-      if(jtpt[1]>=30 && !skip2) {//if a 2-Jet Event
-	Jet2_pT->Fill(jtpt[0],pthatweight);
+      if(etaGood[1]>=30 && !skip2) {//if a 2-Jet Event
+	Jet2_pT->Fill(etaGood[0],pthatweight);
 	Jet2_hT->Fill(hT,pthatweight);
-	Scale_Jet3+=pthatweight;
+	Scale_Jet2+=pthatweight;
       }
-      /*
-      for(int g = 0; g<nrefe; ++g){
-	// fill your jet histograms here:
-
-		
-	if(DEBUG) {
-	  cout<<"Jet 3 Entries pT>=30: "<<Jet3->GetEntries()<<endl;
-	  cout<<"nJet 3 Entries: "<<nJet3->GetEntries()<<endl<<endl;
-            
-	  cout<<"Jet 2 Entries  pT>=30: "<<Jet2->GetEntries()<<endl;
-	  cout<<"nJet 2 Entries: "<<nJet2->GetEntries()<<"\n==========================="<<endl<<endl;
-	  }
-      }//jet loop
-      */
     }// event loop
     fin->Close();
   }//end of file loop
 
-  //SCALE HISTOGRAMS==========================================
+  /* //SCALE HISTOGRAMS==========================================
   Jet2_pT->Scale(1./Scale_Jet2);
   Jet3_pT->Scale(1./Scale_Jet3);
 
   Jet2_hT->Scale(1./Scale_Jet2);
   Jet3_hT->Scale(1./Scale_Jet3);
-
+  */
   //WRITE OUTPUT FILE===========================================
+  cout<<"Scale 3: "<<Scale_Jet3<<endl;
+  cout<<"Scale 2: "<<Scale_Jet2<<endl;
   f.cd();
   f.Write();
   f.Close();  
