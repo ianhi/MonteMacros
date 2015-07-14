@@ -47,7 +47,7 @@ void ppWeightPlot(){
   }
   if(bPTHAT){
     TH1D * pthat = (TH1D*)f->Get("pthat_pp");
-    TCanvas * cPTH = new TCanvas("cPTH","",600,600);
+    TCanvas * cPTH = new TCanvas("cPTH","",900,600);
     cPTH->SetLogy();
     cPTH->cd();
     pthat->SetXTitle("pthat");

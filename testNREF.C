@@ -53,7 +53,7 @@ Int_t nref; //believe this to be the number of jets per event - variable in dije
 void testNREF(){
   
   bool DEBUG=true;
-  TFile * f = TFile::Open("../outputs/5_numEvents25000/med1_170_220_JewelDijet_5_numEvent25000.root");
+  TFile * f = TFile::Open("root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med1/med1_170_220_JewelDijet_5_numEvent25000.root");
    TTree * t = (TTree*)f->Get("dijet/t");
    TTree * nt = (TTree*)f->Get("dijet/nt");
    t->AddFriend(nt);
@@ -64,18 +64,13 @@ void testNREF(){
    
    for(int iev=0;iev<Nevents;iev++){
       t->GetEntry(iev);
-      /*   if(nref==2){
-	cout<<"nref: "<<nref<<endl;
-	cout<<"jtpt[0]: "<<jtpt[0]<<endl;
-	cout<<"jtpt[1]: "<<jtpt[1]<<endl;	
-	cout<<"jtpt[2]: "<<jtpt[2]<<endl<<endl;	
-	}*/
       cout<<"nref: "<<nref<<endl;
-      for(int n=0;n<nref+1;n++){
+      for(int n=0;n<nref+5;n++){
 	cout<<"jtpt["<<n<<"]: "<<jtpt[n]<<endl;
       }
       for(int i=0;i<1000;i++)
 	jtpt[i]=0;
-    cout<<endl<<endl;
+      
+      cout<<endl<<endl;
    }
 }
