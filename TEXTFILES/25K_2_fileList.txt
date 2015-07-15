@@ -1,7 +1,0 @@
-/afs/cern.ch/work/i/ihuntisa/WORK/RUTGERS/multFolders/CMSSW_5_3_20/src/outputs/ROOT/med1_15_30_JewelDijet_0_numEvent25000_2.root
-/afs/cern.ch/work/i/ihuntisa/WORK/RUTGERS/multFolders/CMSSW_5_3_20/src/outputs/ROOT/med1_30_50_JewelDijet_1_numEvent25000_2.root
-/afs/cern.ch/work/i/ihuntisa/WORK/RUTGERS/multFolders/CMSSW_5_3_20/src/outputs/ROOT/med1_50_80_JewelDijet_2_numEvent25000_2.root
-/afs/cern.ch/work/i/ihuntisa/WORK/RUTGERS/multFolders/CMSSW_5_3_20/src/outputs/ROOT/med1_170_220_JewelDijet_5_numEvent25000_2.root
-/afs/cern.ch/work/i/ihuntisa/WORK/RUTGERS/multFolders/CMSSW_5_3_20/src/outputs/ROOT/med1_280_330_JewelDijet_7_numEvent25000_2.root
-/afs/cern.ch/work/i/ihuntisa/WORK/RUTGERS/multFolders/CMSSW_5_3_20/src/outputs/ROOT/med1_330_400_JewelDijet_8_numEvent25000_2.root
-/afs/cern.ch/work/i/ihuntisa/WORK/RUTGERS/multFolders/CMSSW_5_3_20/src/outputs/ROOT/med1_400_460_JewelDijet_9_numEvent25000_2.root

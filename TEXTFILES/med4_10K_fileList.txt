@@ -1,0 +1,10 @@
+root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med4/med4_15_30_JewelDijet_0_numEvent10000.root
+root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med4/med4_30_50_JewelDijet_1_numEvent10000.root
+root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med4/med4_50_80_JewelDijet_2_numEvent10000.root
+root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med4/med4_80_120_JewelDijet_3_numEvent10000.root
+root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med4/med4_170_220_JewelDijet_5_numEvent10000.root
+root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med4/med4_220_280_JewelDijet_6_numEvent10000.root
+root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med4/med4_280_330_JewelDijet_7_numEvent10000.root
+root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med4/med4_330_400_JewelDijet_8_numEvent10000.root
+root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med4/med4_400_460_JewelDijet_9_numEvent10000.root
+root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med4/med4_460_540_JewelDijet_10_numEvent10000.root

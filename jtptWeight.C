@@ -43,13 +43,12 @@ Float_t varpthat; // pthat variable to be set with SetBranchAddress
 float hT;
 
 void jtptWeight(){
-  cout<<"\n\n\n\n\n";
+  cout<<"\n\n\n";
   bool DEBUG=true;
   bool DEBUGLONG=false;//true -> much longer runtime OR lots of output
   TH1::SetDefaultSumw2();
 
-  double Scale_Jet2=0;  
-  double Scale_Jet3=0;
+
   TChain* tChain;
   TChain* ntChain;
   TChain* nt2Chain;
@@ -57,7 +56,7 @@ void jtptWeight(){
   double pthatweightS = 0;//weight for just SUM xs
 
   std::string prefix;
-  prefix="med4";
+  prefix="med4_10K";
   std::string infile;
   infile = "TEXTFILES/"+prefix+"_fileList.txt";
 
@@ -83,15 +82,16 @@ void jtptWeight(){
   }
   if(DEBUG) cout<<"total number of events = "<<ntChain->GetEntries()<<endl;
   
-  //ADD FRIEND------------------------
-  tChain->AddFriend(ntChain);
-  tChain->AddFriend(nt2Chain);  
   //SET BRANCH ADDRESSES-------------------------------
   ntChain->SetBranchAddress("pthat",&varpthat);
   nt2Chain->SetBranchAddress("vz",&vz);
   tChain->SetBranchAddress("jtpt",&jtpt);
   tChain->SetBranchAddress("jteta",&jteta);
   tChain->SetBranchAddress("nref",&nref);
+
+  //ADD FRIEND------------------------
+  tChain->AddFriend(ntChain);
+  tChain->AddFriend(nt2Chain);  
 
   //PTHAT WEIGHTING SETUP======================================================
   double pthatBinning[] = {15,30,50,80,120,170,220,280,330,400,460,540};
@@ -124,7 +124,7 @@ void jtptWeight(){
   //DEFINE OUTPUT FILE===========================================
   std::string outName="ROOT/Jewel/"+prefix+"_weights.root";
   TFile * outf = new TFile(outName.c_str(),"recreate");
-
+  outf->cd();
 
   //DEFINE HISTOGRAMS=============================================
   //------Weighting jtpt and pthat histograms----------------
@@ -177,6 +177,10 @@ void jtptWeight(){
 	pthatweightQ = xsQ[i]/n[i];
 	pthatweightS = xsS[i]/n[i];
       }
+      if(n[i]==0&&varpthat>=pthats[i]){
+	  pthatweightQ = 0;
+	  pthatweightS = 0;
+	}
     }
     
     if(DEBUGLONG && ie%100==0){
@@ -189,55 +193,40 @@ void jtptWeight(){
     hQpthat->Fill(varpthat,pthatweightQ);
     hSpthat->Fill(varpthat,pthatweightS);
     hpthat->Fill(varpthat);
-    //JET RATIO HISTOGRAMS-------------------------------
-    bool skip2 =false;//to ensure that 3 jet events aren't also counted as 2-jet events
-    Float_t etaGood[1000]; // ensures that jet 2 isn't outside eta range
-    int goodIndex=0;
-    hT=0;//scalar sum of jet pt
+    hT=0; // Scalar Sum of jet pT
+    if(DEBUGLONG)   cout<<"BEFORE VECTOR DEF\n";
+    std::vector < float > goodJet;
+    if(DEBUGLONG) cout<<"DEFINED VECTOR\n";
     for(int g = 0; g<nref; ++g){
-      if(fabs(jteta[g])>=2.0) continue;
-      //cout<<"jtpt["<<g<<"]: "<<jtpt[g]<<endl;
-      etaGood[goodIndex]=jtpt[g];
-      //   cout<<"etaGood["<<goodIndex<<"]: "<<etaGood[goodIndex]<<endl;
-      goodIndex++;
+      if(fabs(jteta[g])>=2.0 || jtpt[g]<30) continue;
+      goodJet.push_back(jtpt[g]);
       hT+=jtpt[g];
+      Qjtpt->Fill(jtpt[g],pthatweightQ);
+      Sjtpt->Fill(jtpt[g],pthatweightS); 
     }
-    if(etaGood[2]>=30 && etaGood[3]<30){
-      Jet3_pT->Fill(etaGood[0],pthatweightS);
+    //FILL HISTOGRAMS----------------------------------
+    switch(goodJet.size()){
+    case 3:
+      Jet3_pT->Fill(goodJet[0],pthatweightS);
       Jet3_hT->Fill(hT,pthatweightS);
-      Scale_Jet3+=pthatweightS;
-      skip2=true;
-    }
-    if(etaGood[1]>=30 && !skip2) {
-      Jet2_pT->Fill(etaGood[0],pthatweightS);
+      break;
+    case 2:
+      Jet2_pT->Fill(goodJet[0],pthatweightS);
       Jet2_hT->Fill(hT,pthatweightS);
-      Scale_Jet2+=pthatweightS;
+      break;
     }
-
-    for(int i = 0; i < nref; ++i){//Jet loop
-
-      //Selection Cuts=======================
-      if(TMath::Abs(jteta[i]) > 2) continue;
-      
-      //jet pt histograms-----------------
-      Qjtpt->Fill(jtpt[i],pthatweightQ);
-      Sjtpt->Fill(jtpt[i],pthatweightS); 
-    }//end jet loop
+    if(DEBUGLONG) cout<<"PRE CLEAR\n";
+    goodJet.clear();
+    if(DEBUGLONG)  cout<<"POST CLEAR\n";
 
     for(int i=0;i<1000;i++) //make sure jtpt array is all 0 for next event
       jtpt[i]=0;
  
   }//end event loop
  
-    //SCALE HISTOGRAMS=================================
-  Jet2_pT->Scale(1./Scale_Jet2);
-  Jet3_pT->Scale(1./Scale_Jet2);
 
-  Jet2_hT->Scale(1./Scale_Jet2);
-  Jet3_hT->Scale(1./Scale_Jet3);
   
   //WRITE OUTPUT FILE============================
-  outf->cd();
   outf->Write();
   outf->Close();
 }

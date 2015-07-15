@@ -1,27 +1,52 @@
 
+#include <iostream>
+#include <fstream>
+#include <TH1F.h>
+#include <TH1F.h>
+#include <TH2F.h>
 #include <TFile.h>
-#include <TCanvas.h>
-#include <TProfile.h>
 #include <TTree.h>
+#include <TF1.h>
+#include <TCanvas.h>
 #include <TLegend.h>
+#include <TGraphErrors.h>
+#include <TGraphAsymmErrors.h>
+#include <TH1.h>
+#include <TH2.h>
+#include <TH3.h>
+#include <TFile.h>
+#include <TStyle.h>
+#include <TStopwatch.h>
+#include <TChain.h>
+#include <TProfile.h>
+#include <TStopwatch.h>
+#include <TCut.h>
+#include <cstdlib>
+#include <cmath>
+#include "TLegend.h"
+#include "TLatex.h"
+#include "TMath.h"
+#include "TLine.h"
+#include <stdlib.h>
+#include <string>
+#include <sstream>
+#include <TH1D.h>
 #include <TH1D.h>
 #include <TH2D.h>
-#include <TStyle.h>
-#include <cstdlib>
-#include <stdlib.h>
-#include <stdio.h>
+#include <TString.h>
+
 void jtptWeightPlot(){
   bool bQjtpt=false;//jtpt weighted by QCD xs only
   bool bSjtpt=false;//jtpt weighted by sum of xs
   bool bhQpthat=false;//weighted by QCD xs only pthat
-  bool bhSpthat=false;//weighted by sum of xs pthat spectra
+  bool bhSpthat=true;//weighted by sum of xs pthat spectra
   bool bhpthat=false;//unweighted pthat spectra
   bool bJetRatio_pT=true;//3 jet event to 2 jet event ratio
   bool bJetRatio_hT=true;//3 jet event to 2 jet event ratio
 
   TH1::SetDefaultSumw2();
   gStyle->SetOptStat(0);
-  std::string prefix="med4";
+  std::string prefix="med4_10K";
   std::string filename="ROOT/Jewel/"+prefix+"_weights.root";
   std::string saveName;
   TFile *f = TFile::Open(filename.c_str());
@@ -44,7 +69,7 @@ void jtptWeightPlot(){
     cSj->SaveAs(saveName.c_str(),"RECREATE");
   }
   if(bhQpthat){
-    TH1D * hQpthat = (TH1D*)f->Get("hQpthat");
+    TH1D * hQpthat = (TH1D*)f->Get((prefix+"_hQpthat").c_str());
     TCanvas * cQp = new TCanvas("cQp","",600,600);
     cQp->cd();
     cQp->SetLogy();
@@ -53,7 +78,7 @@ void jtptWeightPlot(){
     cQp->SaveAs(saveName.c_str(),"RECREATE");
   }
   if(bhSpthat){
-    TH1D * hSpthat = (TH1D*)f->Get("hSpthat");
+    TH1D * hSpthat = (TH1D*)f->Get((prefix+"_hSpthat").c_str());
     TCanvas * cSp = new TCanvas("cSp","",600,600);
     cSp->cd();
     cSp->SetLogy();

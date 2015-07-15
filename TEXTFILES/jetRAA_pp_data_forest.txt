@@ -1,0 +1,13 @@
+root://xrootd.cmsaf.mit.edu//store/user/velicanu/PPJet_ForestTag_PYTHIA_localdb_ppJEC_v29_hadd/0.root
+root://xrootd.cmsaf.mit.edu//store/user/velicanu/PPJet_ForestTag_PYTHIA_localdb_ppJEC_v29_hadd/1.root
+root://xrootd.cmsaf.mit.edu//store/user/velicanu/PPJet_ForestTag_PYTHIA_localdb_ppJEC_v29_hadd/10.root
+root://xrootd.cmsaf.mit.edu//store/user/velicanu/PPJet_ForestTag_PYTHIA_localdb_ppJEC_v29_hadd/11.root
+root://xrootd.cmsaf.mit.edu//store/user/velicanu/PPJet_ForestTag_PYTHIA_localdb_ppJEC_v29_hadd/12.root
+root://xrootd.cmsaf.mit.edu//store/user/velicanu/PPJet_ForestTag_PYTHIA_localdb_ppJEC_v29_hadd/2.root
+root://xrootd.cmsaf.mit.edu//store/user/velicanu/PPJet_ForestTag_PYTHIA_localdb_ppJEC_v29_hadd/3.root
+root://xrootd.cmsaf.mit.edu//store/user/velicanu/PPJet_ForestTag_PYTHIA_localdb_ppJEC_v29_hadd/4.root
+root://xrootd.cmsaf.mit.edu//store/user/velicanu/PPJet_ForestTag_PYTHIA_localdb_ppJEC_v29_hadd/5.root
+root://xrootd.cmsaf.mit.edu//store/user/velicanu/PPJet_ForestTag_PYTHIA_localdb_ppJEC_v29_hadd/6.root
+root://xrootd.cmsaf.mit.edu//store/user/velicanu/PPJet_ForestTag_PYTHIA_localdb_ppJEC_v29_hadd/7.root
+root://xrootd.cmsaf.mit.edu//store/user/velicanu/PPJet_ForestTag_PYTHIA_localdb_ppJEC_v29_hadd/8.root
+root://xrootd.cmsaf.mit.edu//store/user/velicanu/PPJet_ForestTag_PYTHIA_localdb_ppJEC_v29_hadd/9.root

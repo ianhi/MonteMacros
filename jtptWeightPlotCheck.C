@@ -13,7 +13,7 @@
 void jtptWeightPlotCheck(){
   TH1::SetDefaultSumw2();
   gStyle->SetOptStat(0);
-  std::string prefix="med5";
+  std::string prefix="med1";
   std::string filename="ROOT/"+prefix+"_weights.root";
   TFile *f = TFile::Open(filename.c_str());
 
@@ -21,8 +21,8 @@ void jtptWeightPlotCheck(){
   TLegend *leg = new TLegend(0.7,0.5,0.99,0.9);
 
 
-  TH1D * Jet2_hT = (TH1D*)f->Get("Jet2_hT_HI");
-  TH1D * Jet3_hT = (TH1D*)f->Get("Jet3_hT_HI");
+  TH1D * Jet2_hT = (TH1D*)f->Get((prefix+"_Jet2_hT_HI").c_str());
+  TH1D * Jet3_hT = (TH1D*)f->Get((prefix+"_Jet3_hT_HI").c_str());
   leg->AddEntry(Jet2_hT,"Jet2");
   leg->AddEntry(Jet3_hT,"Jet3");
 
@@ -39,8 +39,8 @@ void jtptWeightPlotCheck(){
   cJR_hT->SaveAs("PNG/check_hT_med1.png","RECREATE");
 
 
-  TH1D * Jet2_pT = (TH1D*)f->Get("Jet2_pT_HI");
-  TH1D * Jet3_pT = (TH1D*)f->Get("Jet3_pT_HI");
+  TH1D * Jet2_pT = (TH1D*)f->Get((prefix+"_Jet2_pT_HI").c_str());
+  TH1D * Jet3_pT = (TH1D*)f->Get((prefix+"_Jet3_pT_HI").c_str());
   TCanvas * cpT = new TCanvas("chT","",600,600);
   cpT->cd();
   
