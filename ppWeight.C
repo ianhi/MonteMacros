@@ -1,3 +1,4 @@
+#include <TROOT.h>
 #include <iostream>
 #include <fstream>
 #include <TH1F.h>
@@ -177,7 +178,7 @@ void ppWeight(const int startfile=0,int endfile=-1,int radius=3){
 
     }// event loop
     if(DEBUG) cout<<"WAITING TO CLOSE\n";
-    fin->Close();
+    gROOT->GetListOfFiles()->Remove(fin);
     if(DEBUG) cout<<"CLOSED\n";
   }//end of file loop
 

@@ -32,5 +32,4 @@ root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med1/med1_220_280_JewelDijet_
 root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med1/med1_280_330_JewelDijet_7_numEvent9000.root
 root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med1/med1_330_400_JewelDijet_8_numEvent9000.root
 root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med1/med1_460_540_JewelDijet_10_numEvent9000.root
-root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med1/med1_15_30_JewelDijet_0_numEvent75000.root
 

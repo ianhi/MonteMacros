@@ -12,9 +12,10 @@
 #include <stdio.h>
 void ppWeightPlot(){
 
-  bool bPT=true; //jet ratio 
-  bool bHT=true; //jet ratio using nref
-  bool bPTHAT=true; //plot pthat spectra
+  bool bPT=true; //MC Jet  ratio with leading jet pt
+  bool bHT=true; //MC  jet ratio using  H_{T}
+  bool bPTHAT=true; //plot MC spectra
+  bool bJTPT=true; //plot MC jtpt
   bool bDataPT=false;
   bool bDataHT=false;
   TH1::SetDefaultSumw2();
@@ -28,7 +29,7 @@ void ppWeightPlot(){
 
     TCanvas * cPT = new TCanvas("cPT","",600,600);
     cPT->cd();
-    TH1D * ratio_pT = new TH1D("ratio_pT","PT pp 3-Jet Events /2-Jet Events Ratio;Leading Jet P_{T} (GeV)",100,0,500);
+    TH1D * ratio_pT = new TH1D("ratio_pT","PT pp 3-Jet Events /2-Jet Events Ratio;Leading Jet P_{T} (GeV)",100,0,1000);
     ratio_pT->Add(Jet3_pT);
     ratio_pT->Divide(Jet2_pT);
     ratio_pT->SetMaximum(1.2);
@@ -42,7 +43,7 @@ void ppWeightPlot(){
 
     TCanvas * cHT = new TCanvas("cHT","",600,600);
     cHT->cd();
-    TH1D * ratio_hT = new TH1D("ratio_hT","HT pp 3-Jet Events /2-Jet Events Ratio;H_{T} (GeV)",100,0,500);
+    TH1D * ratio_hT = new TH1D("ratio_hT","HT pp 3-Jet Events /2-Jet Events Ratio;H_{T} (GeV)",100,0,1000);
     ratio_hT->Add(Jet3_hT);
     ratio_hT->Divide(Jet2_hT);
     ratio_hT->SetMaximum(1.2);
@@ -57,6 +58,15 @@ void ppWeightPlot(){
     pthat->SetXTitle("pthat");
     pthat->Draw();
     cPTH->SaveAs("PNG/PP_PTHAT_Weight.png","RECREATE");
+  }
+  if(bJTPT){
+    TH1D * jtpt = (TH1D*)f->Get("jtpt_pp");
+    TCanvas * cJTP = new TCanvas("cJTP","",900,600);
+    cJTP->SetLogy();
+    cJTP->cd();
+    jtpt->SetXTitle("jtpt");
+    jtpt->Draw();
+    cJTP->SaveAs("PNG/PP_JTPT_Weight.png","RECREATE");
   }
   if(bDataPT){
     TH1D * Jet2_pT_Data = (TH1D*)f->Get("Jet2_pT_pp_Data");

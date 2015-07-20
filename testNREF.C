@@ -68,8 +68,8 @@ void testNREF(){
       for(int n=0;n<nref+5;n++){
 	cout<<"jtpt["<<n<<"]: "<<jtpt[n]<<endl;
       }
-      for(int i=0;i<1000;i++)
-	jtpt[i]=0;
+      for(int j=0;j<1000;j++)
+	jtpt[j]=0;
       
       cout<<endl<<endl;
    }

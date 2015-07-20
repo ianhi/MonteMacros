@@ -56,10 +56,10 @@ void jtptWeight(){
   double pthatweightS = 0;//weight for just SUM xs
 
   std::string prefix;
-  prefix="med4_10K";
+  prefix="med1";
   std::string infile;
   infile = "TEXTFILES/"+prefix+"_fileList.txt";
-
+  if(DEBUG) cout<<"infile: "<<infile<<endl;
 
   //GET NUMBER OF LINES IN FILE==================================
   std::ifstream fi(infile.c_str());
@@ -82,17 +82,19 @@ void jtptWeight(){
   }
   if(DEBUG) cout<<"total number of events = "<<ntChain->GetEntries()<<endl;
   
+  //ADD FRIEND------------------------
+  tChain->AddFriend(ntChain);
+  // tChain->AddFriend(nt2Chain);  
+  if (DEBUG) cout<<"FRIENDS ADDED\n";
+
   //SET BRANCH ADDRESSES-------------------------------
   ntChain->SetBranchAddress("pthat",&varpthat);
   nt2Chain->SetBranchAddress("vz",&vz);
   tChain->SetBranchAddress("jtpt",&jtpt);
   tChain->SetBranchAddress("jteta",&jteta);
   tChain->SetBranchAddress("nref",&nref);
-
-  //ADD FRIEND------------------------
-  tChain->AddFriend(ntChain);
-  tChain->AddFriend(nt2Chain);  
-
+  if(DEBUG) cout<<"BRANCH ADDRESSES SET"<<endl;
+  
   //PTHAT WEIGHTING SETUP======================================================
   double pthatBinning[] = {15,30,50,80,120,170,220,280,330,400,460,540};
   //                0           1           2      3       4           5            6        7        8        9          10
@@ -123,9 +125,9 @@ void jtptWeight(){
   
   //DEFINE OUTPUT FILE===========================================
   std::string outName="ROOT/Jewel/"+prefix+"_weights.root";
-  TFile * outf = new TFile(outName.c_str(),"recreate");
+  TFile * outf = new TFile(outName.c_str(),"RECREATE");
   outf->cd();
-
+  if (DEBUG) cout<<"Output file: "<<outName<<endl;
   //DEFINE HISTOGRAMS=============================================
   //------Weighting jtpt and pthat histograms----------------
  
@@ -166,6 +168,8 @@ void jtptWeight(){
   //LOOP OVER EVENTS IN TCHAIN===============================
   for(int ie = 0; ie < tChain->GetEntries(); ++ie){//Event loop
     tChain->GetEntry(ie);
+    nt2Chain->GetEntry(ie);
+    //cout<<"vz: "<<vz<<endl;
 
 
     //Selection Cuts=======================

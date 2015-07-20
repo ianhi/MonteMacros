@@ -53,15 +53,16 @@ void ppData(const int startfile=0,int endfile=-1,int radius=3){
   TH1::SetDefaultSumw2();
   
   //Variables===================================================
-  int nref;//number of jets in an event
+  int nref=0;//number of jets in an event
   float jtpt[1000];//jet pt array
   float jteta[1000];
   float hT; // scale sum of jet pT
-  int evt;
-  int run;
-  int lumi;
-  float vz;
-  int pcollisionEventSelection;
+  int evt=0;
+  int run=0;
+  int lumi=0;
+  float vz=0;
+  int pcollisionEventSelection=0;
+  Long64_t TotalEntries=0;
 
   //SET UP FILE LIST==========================================
   std::string infile;
@@ -99,7 +100,8 @@ void ppData(const int startfile=0,int endfile=-1,int radius=3){
   TH1D *Jet2_pT = new TH1D("Jet2_pT_pp_Data","Data pT>=30 2-Jet;Leading Jet P_{T} (GeV)",100,0,1000);
   TH1D *Jet3_pT = new TH1D("Jet3_pT_pp_Data","Data pT>=30 3-Jet;Leading Jet P_{T} (GeV)",100,0,1000);
 
-  TH1D * hJTPT = new TH1D("jtpt_pp_Data","Data pp JTPT weighted",1000,0,1000);
+  TH1D * hJTPT_EtaCut = new TH1D("jtpt_pp_EtaCut","Data pp JTPT good eta",1000,0,1000);
+  TH1D * hJTPT_NoCut = new TH1D("jtpt_pp_NoEtaCut","Data pp JTPT all eta",1000,0,1000);
  
   //READ FILES====================================================
   for(int ifile=startfile;ifile<endfile;ifile++){
@@ -136,8 +138,8 @@ void ppData(const int startfile=0,int endfile=-1,int radius=3){
 
     Long64_t nentries = jetTree->GetEntries();
     if(DEBUG_SHORT)nentries = 10000;
-
-    for (int i = 0; i < nentries; i++){ //start of event loop.
+    TotalEntries+=nentries;
+    for (Long64_t i = 0; i < nentries; i++){ //start of event loop.
       if(DEBUG){
 	cout<<"entry: "<<i<<endl;
 	cout<<Form("ak%dPFJetAnalyzer/t",radius)<<endl;
@@ -149,7 +151,10 @@ void ppData(const int startfile=0,int endfile=-1,int radius=3){
       evtTree_in->GetEntry(i);
 
       
-      if(i%1000==0)cout<<"event = "<<i<<"; run = "<<run<<endl;
+      if(i%1000==0){
+	cout<<"ifile: "<<ifile<<"\nFile: "<<filename<<endl;
+	cout<<"event = "<<i<<"; Of "<<nentries<<"; run = "<<run<<endl<<endl;
+      }
       // SELECTION CUTS--------------------------------------
       if(fabs(vz)>15) continue;
       if(pcollisionEventSelection==0){
@@ -162,10 +167,11 @@ void ppData(const int startfile=0,int endfile=-1,int radius=3){
       std::vector < float > goodJet;
       if(DEBUG) cout<<"DEFINED VECTOR\n";
       for(int g = 0; g<nref; ++g){
+	hJTPT_NoCut->Fill(jtpt[g]);
 	if(fabs(jteta[g])>=2.0 || jtpt[g]<30) continue;
 	goodJet.push_back(jtpt[g]);
 	hT+=jtpt[g];
-	hJTPT->Fill(jtpt[g]);
+	hJTPT_EtaCut->Fill(jtpt[g]);
       }
       //FILL HISTOGRAMS----------------------------------
       switch(goodJet.size()){
@@ -180,12 +186,15 @@ void ppData(const int startfile=0,int endfile=-1,int radius=3){
       }
       if(DEBUG) cout<<"PRE CLEAR\n";
       goodJet.clear();
+      for(int j=0;j<1000;j++)
+	jtpt[j]=0;
       if(DEBUG)  cout<<"POST CLEAR\n";
     }// event loop
     fin->Close();
   }//end of file loop
-
+  cout<<"Total Entries: "<<TotalEntries<<endl;
   f.Write();
+  cout<<"Wrote Output File\n";
   f.Close();  
   cout<<"FINISHED!\n";
 }
