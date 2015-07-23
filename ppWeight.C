@@ -49,6 +49,7 @@ void ppWeight(const int startfile=0,int endfile=-1,int radius=3){
   float jtpt[1000];//jet pt array
   float jteta[1000];
   float hT; // scale sum of jet pT
+  float hT_50; // scale sum of jet pT>=50
   int evt;
   int run;
   int lumi;
@@ -57,7 +58,13 @@ void ppWeight(const int startfile=0,int endfile=-1,int radius=3){
 
   Double_t pthatweight;
   Float_t varpthat;
-
+  double AjWeightSum=0;
+  double AjWeightSum_100=0;
+  double AjWeightSum_50=0;//pT>=50
+  double AjWeightSum_50_100=0;//leading pT>=100
+  Float_t numerator =0;
+  Float_t denominator=0;
+  Float_t Aj=0;
   //SET UP FILE LIST==========================================
   std::string infile;
   infile = "TEXTFILES/jetRAA_pp_mc_forest.txt";
@@ -83,7 +90,8 @@ void ppWeight(const int startfile=0,int endfile=-1,int radius=3){
   cout<<"Running on "<<endfile-startfile<<" forest files"<<endl;
 
   //DEFINE OUTPUT FILE===========================================
-  TFile f(Form("ROOT/pp_weight_%d.root",endfile),"RECREATE");
+  TFile f(Form("ROOT/pp_weight_R%d_%d.root",radius,endfile),"RECREATE");
+  cout<<Form("ROOT/pp_weight_R%d_%d.root",radius,endfile)<<endl;
   f.cd();
   //DEFINE HISTOGRAMS=============================================
   TH1D *Jet2_hT = new TH1D("Jet2_hT_pp","pT>=30 2-Jet;H_{T} (GeV)",100,0,1000);
@@ -94,7 +102,43 @@ void ppWeight(const int startfile=0,int endfile=-1,int radius=3){
 
   TH1D * hPTHAT = new TH1D("pthat_pp","pp PTHAT weighted",1000,0,1000);
   TH1D * hJTPT = new TH1D("jtpt_pp","pp JTPT weighted",1000,0,1000);
+  
+  TH1D *Aj_MC = new TH1D("Aj_pp","pp Aj weight",25,0,1); 
+  //++++++++++++++++++++++++
+  TH1D *Jet2_hT_100 = new TH1D("Jet2_hT_pp_100","_100 pT>=30 2-Jet;H_{T} (GeV)",100,0,1000);
+  TH1D *Jet3_hT_100 = new TH1D("Jet3_hT_pp_100","_100 pT>=30 3-Jet;H_{T} (GeV)",100,0,1000);
 
+  TH1D *Jet2_pT_100 = new TH1D("Jet2_pT_pp_100","_100 pT>=30 2-Jet;Leading Jet P_{T} (GeV)",100,0,1000);
+  TH1D *Jet3_pT_100 = new TH1D("Jet3_pT_pp_100","_100 pT>=30 3-Jet;Leading Jet P_{T} (GeV)",100,0,1000);
+
+  TH1D * hPTHAT_100 = new TH1D("pthat_pp_100","_100 pp PTHAT weighted",1000,0,1000);
+  TH1D * hJTPT_100 = new TH1D("jtpt_pp_100","_100 pp JTPT weighted",1000,0,1000);
+  
+  TH1D *Aj_MC_100 = new TH1D("Aj_pp_100","_100 pp Aj weight",25,0,1); 
+
+  //++++++++++++++++
+  TH1D *Jet2_hT_50 = new TH1D("Jet2_hT_pp_50","pT>=50 2-Jet;H_{T} (GeV)",100,0,1000);
+  TH1D *Jet3_hT_50 = new TH1D("Jet3_hT_pp_50","pT>=50 3-Jet;H_{T} (GeV)",100,0,1000);
+
+  TH1D *Jet2_pT_50 = new TH1D("Jet2_pT_pp_50","pT>=50 2-Jet;Leading Jet P_{T} (GeV)",100,0,1000);
+  TH1D *Jet3_pT_50 = new TH1D("Jet3_pT_pp_50","pT>=50 3-Jet;Leading Jet P_{T} (GeV)",100,0,1000);
+
+  TH1D * hPTHAT_50 = new TH1D("pthat_pp_50","pp PTHAT pT>=50 weighted",1000,0,1000);
+  TH1D * hJTPT_50 = new TH1D("jtpt_pp_50","pp JTPT pT>=50 weighted",1000,0,1000);
+  
+  TH1D *Aj_MC_50 = new TH1D("Aj_pp_50","pp Aj pT>=50 weight",25,0,1); 
+  //+++++++++++++++++++
+
+  TH1D *Jet2_hT_50_100 = new TH1D("Jet2_hT_pp_50_100","pT1>=100 pT>=50 2-Jet;H_{T} (GeV)",100,0,1000);
+  TH1D *Jet3_hT_50_100 = new TH1D("Jet3_hT_pp_50_100","pT1>=100 pT>=50 3-Jet;H_{T} (GeV)",100,0,1000);
+
+  TH1D *Jet2_pT_50_100 = new TH1D("Jet2_pT_pp_50_100","pT1>=100 pT>=50 2-Jet;Leading Jet P_{T} (GeV)",100,0,1000);
+  TH1D *Jet3_pT_50_100 = new TH1D("Jet3_pT_pp_50_100","pT1>=100 pT>=50 3-Jet;Leading Jet P_{T} (GeV)",100,0,1000);
+
+  TH1D * hPTHAT_50_100 = new TH1D("pthat_pp_50_100","pT1>=100 pp PTHAT pT>=50 weighted",1000,0,1000);
+  TH1D * hJTPT_50_100 = new TH1D("jtpt_pp_50_100","pT1>=100 pp JTPT pT>=50 weighted",1000,0,1000);
+  
+  TH1D *Aj_MC_50_100 = new TH1D("Aj_pp_50_100","pT1>=100 pp Aj pT>=50 weight",25,0,1); 
   //READ FILES====================================================
   stringstream weightName;//stringstream allows easy concat of str and int
   for(int ifile=startfile;ifile<endfile;ifile++){
@@ -135,6 +179,7 @@ void ppWeight(const int startfile=0,int endfile=-1,int radius=3){
     //LOOP OVER EVENTS============================================
 
     Long64_t nentries = jetTree->GetEntries();
+    if(DEBUG) cout<<"nentries: "<<nentries<<endl;
     if(DEBUG_SHORT)nentries = 100;
 
     for (int i = 0; i < nentries; i++){ //start of event loop.
@@ -154,36 +199,107 @@ void ppWeight(const int startfile=0,int endfile=-1,int radius=3){
       //SET UP FOR FILLING------------------------------------
 
       hT=0; // Scalar Sum of jet pT
+      hT_50=0;//Scale sum of jt pT pT>=50
       std::vector < float > goodJet;	  
+      std::vector < float > goodJet_50;
       for(int g = 0; g<nref; ++g){
-	if(fabs(jteta[g])>=2.0 || jtpt[g]<30) continue;
-	goodJet.push_back(jtpt[g]);
-	hT+=jtpt[g];
-	hJTPT->Fill(jtpt[g],pthatweight);
+	if(fabs(jteta[g])<2.0 && jtpt[g]>=50){
+	  hT_50+=jtpt[g];
+	  goodJet_50.push_back(jtpt[g]);
+	  hJTPT_50->Fill(jtpt[g],pthatweight);
+	}
+	if(fabs(jteta[g])<2.0 || jtpt[g]>=30){
+	  goodJet.push_back(jtpt[g]);
+	  hT+=jtpt[g];
+	  hJTPT->Fill(jtpt[g],pthatweight);
+	}
       }
       //FILL HISTOGRAMS----------------------------------
       hPTHAT->Fill(varpthat,pthatweight);
-
+      if(DEBUG) cout<<"HERE: "<<i<<endl;
+      //++++30+++++++NONE
+      if(goodJet.size()>=2){
+	numerator = goodJet[0]-goodJet[1];
+	denominator=goodJet[0]+goodJet[1];
+	Aj=numerator/denominator;
+	AjWeightSum+=pthatweight;
+	Aj_MC->Fill(Aj,pthatweight);
+	if(goodJet[0]>=100){
+	  AjWeightSum_100+=pthatweight;
+	  Aj_MC_100->Fill(Aj,pthatweight);
+	}
+      }
+      if(DEBUG) cout<<"goodJet AJ"<<endl;
+      if(goodJet_50.size()>=2){
+	numerator = goodJet_50[0]-goodJet_50[1];
+	denominator=goodJet_50[0]+goodJet_50[1];
+	Aj=numerator/denominator;
+	AjWeightSum_50+=pthatweight;
+	Aj_MC_50->Fill(Aj,pthatweight);
+	if(goodJet_50[0]>=100){
+	  AjWeightSum_50_100+=pthatweight;
+	  Aj_MC_50_100->Fill(Aj,pthatweight);
+	}
+      }
+    
+      if(DEBUG) cout<<"goodJet50  AJ"<<endl;
       switch(goodJet.size()){
       case 3:
 	Jet3_pT->Fill(goodJet[0],pthatweight);
 	Jet3_hT->Fill(hT,pthatweight);
+	if(goodJet[0]>=0){
+	  Jet3_pT_100->Fill(goodJet[0],pthatweight);
+	  Jet3_hT_100->Fill(hT,pthatweight);
+	}
 	break;
       case 2:
 	Jet2_pT->Fill(goodJet[0],pthatweight);
 	Jet2_hT->Fill(hT,pthatweight);
+	if(goodJet[0]>=0){
+	  Jet2_pT_100->Fill(goodJet[0],pthatweight);
+	  Jet2_hT_100->Fill(hT,pthatweight);
+	}
 	break;
       }
+      
+      if(DEBUG)cout<<"goodJet SWITCH"<<endl;
+      //++++++50++++++NONE
+      switch(goodJet_50.size()){
+      case 3:
+	Jet3_pT_50->Fill(goodJet_50[0],pthatweight);
+	Jet3_hT_50->Fill(hT_50,pthatweight);
+	if(goodJet_50[0]>=100){
+	  Jet3_pT_50_100->Fill(goodJet_50[0],pthatweight);
+	  Jet3_hT_50_100->Fill(hT_50,pthatweight);
+	}
+	break;
+      case 2:
+	Jet2_pT_50->Fill(goodJet_50[0],pthatweight);
+	Jet2_hT_50->Fill(hT_50,pthatweight);
+	if(goodJet_50[0]>=100){
+	  Jet2_pT_50_100->Fill(goodJet_50[0],pthatweight);
+	  Jet2_hT_50_100->Fill(hT_50,pthatweight);
+	}
+	break;
+      }
+
+      if(DEBUG) cout<<"goodJet 50 SWITCH"<<endl;
+
       goodJet.clear();
+      goodJet_50.clear();
+      if(DEBUG) cout<<"Vectors Cleared"<<endl;
 
     }// event loop
     if(DEBUG) cout<<"WAITING TO CLOSE\n";
     gROOT->GetListOfFiles()->Remove(fin);
     if(DEBUG) cout<<"CLOSED\n";
   }//end of file loop
+  Aj_MC->Scale(1./AjWeightSum);
+  Aj_MC_100->Scale(1./AjWeightSum_100);
 
+  Aj_MC_50->Scale(1./AjWeightSum_50);
+  Aj_MC_50_100->Scale(1./AjWeightSum_50_100);
   //WRITE OUTPUT FILE===========================================
-  f.cd();
   f.Write();
   f.Close();  
 
