@@ -1,0 +1,11 @@
+root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med8/med8_15_30_JewelDijet_0_numEvent15000.root
+root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med8/med8_30_50_JewelDijet_1_numEvent15000.root
+root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med8/med8_50_80_JewelDijet_2_numEvent15000.root
+root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med8/med8_80_120_JewelDijet_3_numEvent15000.root
+root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med8/med8_120_170_JewelDijet_4_numEvent15000.root
+root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med8/med8_170_220_JewelDijet_5_numEvent15000.root
+root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med8/med8_220_280_JewelDijet_6_numEvent15000.root
+root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med8/med8_280_330_JewelDijet_7_numEvent15000.root
+root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med8/med8_330_400_JewelDijet_8_numEvent15000.root
+root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med8/med8_400_460_JewelDijet_9_numEvent15000.root
+root://eosuser.cern.ch://eos/user/i/ihuntisa/Jewel/med8/med8_460_540_JewelDijet_10_numEvent15000.root

@@ -35,7 +35,7 @@
 #include <TH2D.h>
 #include <TString.h>
 
-void jtptWeightPlot(){
+void jtptWeight5Plot(){
   bool bQjtpt=false;//jtpt weighted by QCD xs only
   bool bSjtpt=false;//jtpt weighted by sum of xs
   bool bhQpthat=false;//weighted by QCD xs only pthat
@@ -43,11 +43,12 @@ void jtptWeightPlot(){
   bool bhpthat=false;//unweighted pthat spectra
   bool bJetRatio_pT=true;//3 jet event to 2 jet event ratio
   bool bJetRatio_hT=true;//3 jet event to 2 jet event ratio
+  bool bJetRatio_hT_50=true;//3 jet event to 2 jet event ratio
   bool bAj=true;
-
+  bool bAj_50=true;
   TH1::SetDefaultSumw2();
   gStyle->SetOptStat(0);
-  std::string prefix="Pythia";
+  std::string prefix="med1";
   std::string filename="ROOT/Jewel/"+prefix+"_weights.root";
   std::string saveName;
   cout<<"Filename: "<<filename<<endl;
@@ -139,6 +140,32 @@ void jtptWeightPlot(){
     AJ_MC->Draw();
     saveName="PNG/AJ_"+prefix+".png";
     cAJ->SaveAs(saveName.c_str(),"RECREATE");
+  } 
+  if(bAj_50){
+    TH1D * AJ_MC_50 = (TH1D*)f->Get((prefix+"_Aj_MC_50").c_str());
+    TCanvas * cAJ_50 = new TCanvas("cAJ_50","",600,600);
+    cAJ_50->cd();
+    AJ_MC_50->SetMarkerStyle(20);
+    AJ_MC_50->SetMarkerColor(kBlack);
+    AJ_MC_50->SetYTitle("Event Fraction");
+    AJ_MC_50->GetYaxis()->SetTitleOffset(1.4);
+    AJ_MC_50->Draw();
+    saveName="PNG/AJ_50_"+prefix+".png";
+    cAJ_50->SaveAs(saveName.c_str(),"RECREATE");
   }
-
+  if(bJetRatio_hT_50){
+    TH1D * Jet2_hT_50 = (TH1D*)f->Get((prefix+"_Jet2_hT_HI_50").c_str());
+    TH1D * Jet3_hT_50 = (TH1D*)f->Get((prefix+"_Jet3_hT_HI_50").c_str());
+    TCanvas * cJR_hT_50 = new TCanvas("cJR_hT_50","",600,600);
+    cJR_hT_50->cd();
+    TH1D * ratio_hT_50 = new TH1D("ratio_hT_50",(prefix+"_50 PbPb 3-Jet Events /2-Jet Events Ratio;H_{T} (GeV)").c_str(),100,0,1000);
+    ratio_hT_50->Add(Jet3_hT_50);
+    ratio_hT_50->Divide(Jet2_hT_50);
+    ratio_hT_50->SetMarkerStyle(20);
+    ratio_hT_50->SetMarkerColor(kBlack);
+    ratio_hT_50->SetYTitle("R_{32}");
+    ratio_hT_50->Draw();
+    saveName="PNG/JR_hT_50_"+prefix+".png";
+    cJR_hT_50->SaveAs(saveName.c_str(),"RECREATE");
+  }
 }

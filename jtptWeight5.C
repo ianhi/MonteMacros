@@ -43,7 +43,7 @@ Float_t varpthat; // pthat variable to be set with SetBranchAddress
 float hT;
 float hT_50;
 
-void jtptWeight(){
+void jtptWeight5(){
   cout<<"\n\n\n";
   bool DEBUG=true;
   bool DEBUGLONG=false;//true -> much longer runtime OR lots of output
@@ -62,9 +62,9 @@ void jtptWeight(){
   Float_t Aj=0;
 
   std::string prefix;
-  prefix="med1";
+  prefix="med8";
   std::string infile;
-  infile = "TEXTFILES/"+prefix+"_fileList.txt";
+  infile = "TEXTFILES/"+prefix+"_35_fileList.txt";
   if(DEBUG) cout<<"infile: "<<infile<<endl;
 
   //GET NUMBER OF LINES IN FILE==================================
@@ -77,7 +77,7 @@ void jtptWeight(){
   //TCHAIN FILES TOGETHER=======================================
   std::ifstream instr(infile.c_str(), std::ifstream::in);
   std::string filename;
-  tChain = new TChain("dijet/t");
+  tChain = new TChain("dijet/t5");
   ntChain = new TChain("dijet/nt"); 
   nt2Chain = new TChain("ana/hi");
   for(int i=0;i<number_of_lines;i++){
@@ -130,7 +130,7 @@ void jtptWeight(){
 
   
   //DEFINE OUTPUT FILE===========================================
-  std::string outName="ROOT/Jewel/"+prefix+"_weights.root";
+  std::string outName="ROOT/Jewel/"+prefix+"_35_weights.root";
   TFile * outf = new TFile(outName.c_str(),"RECREATE");
   outf->cd();
   if (DEBUG) cout<<"Output file: "<<outName<<endl;
@@ -156,7 +156,7 @@ void jtptWeight(){
   TH1D * hpthat = new TH1D(name.c_str(),title.c_str(),500,0,500);
   //------Jet Ratio Histograms--------------------------------
 
- title=prefix+" 2-Jet;Leading Jet P_{T} (GeV)";
+  title=prefix+" 2-Jet;Leading Jet P_{T} (GeV)";
   name=prefix+"_Jet2_pT_HI";
   TH1D *Jet2_pT = new TH1D(name.c_str(),title.c_str(),100,0,500);
   name+="_50";
@@ -184,7 +184,6 @@ void jtptWeight(){
   TH1D *Aj_MC = new TH1D(name.c_str(),title.c_str(),25,0,1); 
   name+="_50";
   TH1D *Aj_MC_50 = new TH1D(name.c_str(),title.c_str(),25,0,1);
-
   //LOOP OVER EVENTS IN TCHAIN===============================
   for(int ie = 0; ie < tChain->GetEntries(); ++ie){//Event loop
     tChain->GetEntry(ie);
@@ -202,9 +201,9 @@ void jtptWeight(){
 	pthatweightS = xsS[i]/n[i];
       }
       if(n[i]==0&&varpthat>=pthats[i]){
-	  pthatweightQ = 0;
-	  pthatweightS = 0;
-	}
+	pthatweightQ = 0;
+	pthatweightS = 0;
+      }
     }
     
     if(DEBUGLONG && ie%100==0){
@@ -217,8 +216,6 @@ void jtptWeight(){
     hQpthat->Fill(varpthat,pthatweightQ);
     hSpthat->Fill(varpthat,pthatweightS);
     hpthat->Fill(varpthat);
-    hT=0; // Scalar Sum of jet pT
-    if(DEBUGLONG)   cout<<"BEFORE VECTOR DEF\n";
 
     hT=0; // Scalar Sum of jet pT
     hT_50=0;
@@ -260,10 +257,12 @@ void jtptWeight(){
     case 3:
       Jet3_pT->Fill(goodJet[0],pthatweightS);
       Jet3_hT->Fill(hT,pthatweightS);
+
       break;
     case 2:
       Jet2_pT->Fill(goodJet[0],pthatweightS);
       Jet2_hT->Fill(hT,pthatweightS);
+
       break;
     }
 
@@ -272,6 +271,7 @@ void jtptWeight(){
     case 3:
       Jet3_pT_50->Fill(goodJet_50[0],pthatweightS);
       Jet3_hT_50->Fill(hT_50,pthatweightS);
+
       break;
     case 2:
       Jet2_pT_50->Fill(goodJet_50[0],pthatweightS);

@@ -14,7 +14,8 @@
 void ppDataPlot(){
   bool bDataPT=true;
   bool bDataHT=true;
-  bool bDataJT=true;
+  bool bDataJT_EtaCut=true;
+  bool bDataJT_NoCut=true;
   int width = 900;
   int height = 600;
   TH1::SetDefaultSumw2();
@@ -52,15 +53,25 @@ void ppDataPlot(){
     ratio_hT_Data->Draw();
     cHT_Data->SaveAs("PNG/PP_JR_HT_Data.png","RECREATE");
   }
-  if(bDataJT){
+  if(bDataJT_EtaCut){
 
-    TH1D * jtpt_pp_Data = (TH1D*)f->Get("jtpt_pp_Data");
+    TH1D * jtpt_pp_EtaCut = (TH1D*)f->Get("jtpt_pp_EtaCut");
 
-    TCanvas * cJT_Data = new TCanvas("cJT_Data","",width,height);
-    cJT_Data->cd();
-    cJT_Data->SetLogy();
-    jtpt_pp_Data->Draw();
-    cJT_Data->SaveAs("PNG/PP_JTPT_Data.png","RECREATE");
+    TCanvas * cJTEC_Data = new TCanvas("cJTEC_Data","",width,height);
+    cJTEC_Data->cd();
+    cJTEC_Data->SetLogy();
+    jtpt_pp_EtaCut->Draw();
+    cJTEC_Data->SaveAs("PNG/PP_JTPT_EtaCut.png","RECREATE");
+  }
+  if(bDataJT_NoCut){
+
+    TH1D * jtpt_pp_NoCut = (TH1D*)f->Get("jtpt_pp_NoEtaCut");
+
+    TCanvas * cJTNC_Data = new TCanvas("cJTNC_Data","",width,height);
+    cJTNC_Data->cd();
+    cJTNC_Data->SetLogy();
+    jtpt_pp_NoCut->Draw();
+    cJTNC_Data->SaveAs("PNG/PP_JTPT_NoCut.png","RECREATE");
   }
   f->Close();
 

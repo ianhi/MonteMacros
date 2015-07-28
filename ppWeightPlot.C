@@ -14,8 +14,10 @@ void ppWeightPlot(){
 
   bool bPT=true; //MC Jet  ratio with leading jet pt
   bool bHT=true; //MC  jet ratio using  H_{T}
+  bool bHT_50=true;
   bool bPTHAT=true; //plot MC spectra
   bool bJTPT=true; //plot MC jtpt
+  bool bAJ=true;
   bool bDataPT=false;
   bool bDataHT=false;
   TH1::SetDefaultSumw2();
@@ -50,6 +52,20 @@ void ppWeightPlot(){
     ratio_hT->Draw();
     cHT->SaveAs("PNG/PP_JR_HT_Weight.png","RECREATE");
   }
+  if(bHT_50){
+
+    TH1D * Jet2_hT_50 = (TH1D*)f->Get("Jet2_hT_pp_50");
+    TH1D * Jet3_hT_50 = (TH1D*)f->Get("Jet3_hT_pp_50");
+
+    TCanvas * cHT_50 = new TCanvas("cHT_50","",600,600);
+    cHT_50->cd();
+    TH1D * ratio_hT_50 = new TH1D("ratio_hT_50","H_{T} pT>=50 pp 3-Jet Events /2-Jet Events Ratio;H_{T} (GeV)",100,0,1000);
+    ratio_hT_50->Add(Jet3_hT_50);
+    ratio_hT_50->Divide(Jet2_hT_50);
+    ratio_hT_50->SetMaximum(1.2);
+    ratio_hT_50->Draw();
+    cHT_50->SaveAs("PNG/PP_JR_HT_50_Weight.png","RECREATE");
+  }
   if(bPTHAT){
     TH1D * pthat = (TH1D*)f->Get("pthat_pp");
     TCanvas * cPTH = new TCanvas("cPTH","",900,600);
@@ -68,6 +84,22 @@ void ppWeightPlot(){
     jtpt->Draw();
     cJTP->SaveAs("PNG/PP_JTPT_Weight.png","RECREATE");
   }
+  if(bAJ){
+    TH1D * AJ_MC = (TH1D*)f->Get("Aj_pp");
+    TCanvas * cAJ = new TCanvas("cAJ","",600,600);
+    cAJ->cd();
+    AJ_MC->SetMarkerStyle(20);
+    AJ_MC->SetMarkerColor(kRed);
+    AJ_MC->SetYTitle("Event Fraction");
+    AJ_MC->GetYaxis()->SetTitleOffset(1.4);
+    AJ_MC->Draw();
+    cAJ->SaveAs("PNG/AJ_MC.png","RECREATE");
+  }
+
+
+
+
+  //+++++++++++++++++++DATA++++++++++++++++++++++++
   if(bDataPT){
     TH1D * Jet2_pT_Data = (TH1D*)f->Get("Jet2_pT_pp_Data");
     TH1D * Jet3_pT_Data = (TH1D*)f->Get("Jet3_pT_pp_Data");
