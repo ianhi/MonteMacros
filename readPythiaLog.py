@@ -3,7 +3,10 @@ Ian Hunt-Isaak
 ihuntisa@oberlin.edu -Primary email un may 2017
 ianhuntisaak@gmail.com - Permanent email
 
+
+ASSUMES THAT FILES ARE NAMED as Pythia_[minFile-maxFile]_[numEventString].log   -  change input section below to adjust log names to your log files.
 This file extracts the sum of cross section weights from the below section of the Pythia output log file. SUM = sum of all cross sections. 
+
 
 Searches for "PYMAXI" in a line and then gets the cross section from that which is SUMString
 Also searches for "PYSTAT" in a line then gets the cross from that which is SUM_STATString
@@ -54,9 +57,11 @@ PYSTAT:
 
 '''
 import sys
-
+#======================INPUTS===================
 minFile=0
 maxFile=11
+numEventString="50K"
+#=======================end inputs
 skipSix=False
 SUMString=""
 SUM_STATString=""
@@ -68,7 +73,7 @@ for fileNum in range(minFile,maxFile):
     print "\n\n\nFILE   :"+str(fileNum)+""
     File = open('Pythia_'+str(fileNum)+'_50K.log')
     f = open('out'+str(fileNum)+'.txt','w')
-    print 'Pythia_'+str(fileNum)+'_50K.log'
+    print 'Pythia_'+str(fileNum)+numEventString+'.log'
     for i in range(0,400000):
         line= File.readline()
         if "PYMAXI" in line:
